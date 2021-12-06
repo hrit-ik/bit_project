@@ -1,8 +1,7 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react'
 import { Button, View, Text, StyleSheet } from 'react-native';
 
-export default function Details({route, navigation}) {
-    const {itemId, otherParam} = route.params;
+export default function Details({navigation}) {
     const [count, setCount] = useState(0);
 
     useLayoutEffect(() => {
@@ -22,7 +21,7 @@ export default function Details({route, navigation}) {
                 title="Go back to Home"
                 onPress={() => navigation.goBack()}
             />
-            <Text style={styles.text}>itemId: {itemId}</Text>
+            <Text style={styles.text}>itemId: </Text>
             <Text style={styles.text}>{count}</Text>
         </View>
     )
