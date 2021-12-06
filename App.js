@@ -3,10 +3,10 @@ import { Button, View, Text, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from './screens/home';
 import Details from './screens/details';
 import Settings from './screens/settings';
 import {Ionicons} from '@expo/vector-icons';
+import HomeStack from './components/homeStack';
 
 const Tab = createBottomTabNavigator();
 export default function App() {
@@ -29,7 +29,7 @@ export default function App() {
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
   
-              if (route.name === 'Home') {
+              if (route.name === 'HomeStack') {
                 iconName = focused ? 'home' : 'home-outline';
               } else if (route.name === 'Settings') {
                 iconName = focused ? 'cog' : 'cog-outline';
@@ -43,7 +43,7 @@ export default function App() {
             },
           })}
         >
-          <Tab.Screen name="Home" component={Home} />
+          <Tab.Screen name="HomeStack" component={HomeStack} options={{headerShown: false}}/>
           <Tab.Screen name="Details" component={Details} />
           <Tab.Screen name="Settings" component={Settings} options={{ tabBarBadge: 3 }}/>
         </Tab.Navigator>

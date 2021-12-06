@@ -18,8 +18,8 @@ export default function Details({navigation}) {
     return (
         <View style={styles.container}>
             <Button
-                title="Go back to Home"
-                onPress={() => navigation.goBack()}
+                title="Nothing here"
+                // onPress={() => navigation.goBack()}
             />
             <Text style={styles.text}>itemId: </Text>
             <Text style={styles.text}>{count}</Text>

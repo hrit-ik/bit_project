@@ -8,11 +8,8 @@ export default function Home({navigation}) {
     return (
         <View style={styles.container}>
             <Button
-                title="Go to Details"
-                onPress={() => navigation.navigate('Details',{
-                    itemId: Math.floor(Math.random() * 100),
-                    otherParam: 'anything I might want',
-                })}
+                title="Open the Post"
+                onPress={() => navigation.navigate('EventDetails')}
             />
         </View>
     )
