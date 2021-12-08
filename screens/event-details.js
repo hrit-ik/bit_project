@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Image, StyleSheet, Dimensions, Text, ScrollView, Button } from 'react-native';
 import img1 from '../assets/images/img1.jpg';
+import img2 from '../assets/images/img2.jpeg';
 
 
 export default function EventDetails({navigation}) {
@@ -10,12 +11,12 @@ export default function EventDetails({navigation}) {
     }
     return (
         <View style={styles.container}>
-            <View style={styles.imageContainer}>
-                <Image source={img1}
-                    style={styles.image}
-                />
-            </View>
             <ScrollView style={styles.scrollView}>
+                <View style={styles.imageContainer}>
+                    <Image source={img1}
+                        style={styles.image}
+                    />
+                </View>
                 <View style={styles.textContainer}>
                         <Text style={styles.title}>
                             Event Title
@@ -59,10 +60,10 @@ export default function EventDetails({navigation}) {
                             <Button title="Join" color={'#fff'} />
                         </View>
                     </View>
+                    <View style={styles.backButton}>
+                         <Button title="Back" color={'#000'} onPress={navigateBack}/>
+                    </View> 
             </ScrollView>
-            <View style={styles.backButton}>
-                <Button title="Back" color={'#000'} onPress={navigateBack}/>
-            </View>
         </View>
     )
 }
@@ -81,19 +82,19 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         shadowOffset: { width: 0, height: 10 },
-        shadowColor: 'black',
-        shadowOpacity: 0.7,
-        shadowRadius: 10,
-        elevation: 5,
-        position: 'absolute',
+        // shadowColor: 'black',
+        // shadowOpacity: 0.7,
+        // shadowRadius: 10,
+        // elevation: 5,
+        // position: 'absolute',
         borderBottomLeftRadius: 50,
-        zIndex: 1,
+        // zIndex: 1,
     },
     textContainer: {
         padding: 20,
         paddingTop: 40,
         marginBottom: 60,
-        marginTop: 400,
+        // marginTop: 400,
     },
     title: {
         fontSize: 30,
@@ -117,5 +118,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 20,
         width: 80,
+        shadowColor: 'black',
+        shadowOpacity: 0.7,
+        shadowRadius: 10,
+        elevation: 5,
     },
 })
