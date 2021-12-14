@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image, StyleSheet, Dimensions, Text, ScrollView, Button } from 'react-native';
+import { View, Image, StyleSheet, Dimensions, Text, ScrollView, Button, SafeAreaView } from 'react-native';
 import img1 from '../assets/images/img1.jpg';
 import img2 from '../assets/images/img2.jpeg';
 
@@ -10,7 +10,7 @@ export default function EventDetails({navigation}) {
         navigation.goBack();
     }
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scrollView}>
                 <View style={styles.imageContainer}>
                     <Image source={img1}
@@ -64,7 +64,7 @@ export default function EventDetails({navigation}) {
                          <Button title="Back" color={'#000'} onPress={navigateBack}/>
                     </View> 
             </ScrollView>
-        </View>
+        </SafeAreaView>
     )
 }
 
