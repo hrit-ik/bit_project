@@ -13,7 +13,7 @@ export default function EventDetails({navigation}) {
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scrollView}>
                 <View style={styles.imageContainer}>
-                    <Image source={img1}
+                    <Image source={{uri: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg'}}
                         style={styles.image}
                     />
                 </View>

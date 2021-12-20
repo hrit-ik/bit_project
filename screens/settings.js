@@ -1,9 +1,14 @@
-import React from 'react'
-import { View , Text, TouchableOpacity, StyleSheet} from 'react-native'
+import React, {useState, useContext} from 'react'
+import { View , Text, TouchableOpacity, StyleSheet, Switch} from 'react-native'
 import { auth } from '../Backend/firebase'
 import {signOut} from 'firebase/auth'
+import { SettingsContext } from '../components/settingsContext'
 
 export default function Settings({navigation}) {
+    const [adminMode, setAdminMode]  = useContext(SettingsContext)
+    const toggleAdminMode = () => {
+      setAdminMode(!adminMode)
+    }
     const handleSignOut = () => {
         signOut(auth)
         .then(
@@ -20,6 +25,15 @@ export default function Settings({navigation}) {
             <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
                 <Text>Sign Out</Text>
             </TouchableOpacity>
+            <View>
+                <Switch
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    thumbColor={adminMode ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleAdminMode}
+                    value={adminMode}
+                />
+            </View>
         </View>
     )
 }

@@ -5,11 +5,12 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import EventDetails from './screens/event-details';
 import LoginScreen from './screens/LoginScreen';
 import HomeTab from './components/HomeTab';
-
+import { SettingsProvider } from './components/settingsContext';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
+    <SettingsProvider value="hello">
       <NavigationContainer>
         <Stack.Navigator>
             <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}} />
@@ -21,6 +22,7 @@ export default function App() {
             />
         </Stack.Navigator>
       </NavigationContainer>
+    </SettingsProvider>
   );
 }
 

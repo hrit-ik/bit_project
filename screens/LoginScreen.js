@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { StyleSheet, Text, View, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, KeyboardAvoidingView, TouchableOpacity, Image } from 'react-native'
 import { TextInput } from 'react-native'
 import {auth} from '../Backend/firebase'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
@@ -47,6 +47,10 @@ const LoginScreen = ({navigation}) => {
             <KeyboardAvoidingView
                 behavior="padding"
                 style={styles.container}>
+
+                <View style={styles.logoContainer}>
+                    <Image source={require('./../assets/images/bit.png')} style={styles.logo}/>
+                </View>
 
                 <View style={styles.inputContainer}>
                     <TextInput
@@ -124,4 +128,23 @@ const styles = StyleSheet.create({
     signupButton: {
         backgroundColor: '#0782f9',
     },
+    // signupButtonText: {
+    //     color: '#fff',
+    // },
+    logoContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 50,
+        borderRadius: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 4, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 20,
+        elevation: 5,
+    },
+    logo: {
+        width: 250,
+        height: 160,
+        borderRadius: 20,
+    }
 })
