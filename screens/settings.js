@@ -3,9 +3,11 @@ import { View , Text, TouchableOpacity, StyleSheet, Switch} from 'react-native'
 import { auth } from '../Backend/firebase'
 import {signOut} from 'firebase/auth'
 import { SettingsContext } from '../components/settingsContext'
+import { getUserInfo } from '../Backend/getUserInfo'
 
 export default function Settings({navigation}) {
     const [adminMode, setAdminMode]  = useContext(SettingsContext)
+    console.log(getUserInfo(auth?.currentUser?.uid))
     const toggleAdminMode = () => {
       setAdminMode(!adminMode)
     }
@@ -20,8 +22,8 @@ export default function Settings({navigation}) {
 
     return (
         <View style={styles.container}>
-            <Text>Email: {auth.currentUser?.email}</Text>
-            <Text>Id: {auth.currentUser?.uid}</Text>
+            {/* <Text>Email: {auth.currentUser?.email}</Text>
+            <Text>Id: {auth.currentUser?.uid}</Text> */}
             <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
                 <Text>Sign Out</Text>
             </TouchableOpacity>

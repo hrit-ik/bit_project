@@ -7,11 +7,12 @@ import { auth } from "../Backend/firebase";
 import { useUpload } from '../Hooks/useUpload';
 
 const Add = () => {
-    const [image, setImage] = useState(null);
+    const [imageUri, setImageUri] = useState(null);
+    const [imageAspect, setImageAspect] = useState(null);
     const [eventName, setEventName] = useState('');
     const [eventDate, setEventDate] = useState('');
     const [eventTime, setEventTime] = useState('');
-    const [eventDescription, setEventDescription] = useState('');
+    const [eventDescription, setEventDescription] = useState('');  
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -25,56 +26,69 @@ const Add = () => {
     console.log(result);
 
     if (!result.cancelled) {
-      setImage(result.uri);
-        useUpload('images', result.uri);
+        setImageUri(result.uri);
+        setImageAspect(result.width/result.height);
     }
   };
 
-  const docAdd = async()=>{
-    try {
-        const docRef = await addDoc(collection(db, "Events"), {
-            eventName: eventName,
-            eventDate: eventDate,
-            eventTime: eventTime,
-            eventDescription: eventDescription,
-            createdAt: Timestamp.now(),
-            // postedBy: auth.currentUser?.email,
-        });
-        console.log("Document written with ID: ", docRef.id);
-      } catch (e) {
-        console.error("Error adding document: ", e);
-      }      
+  const addEvent = async()=>{
+    if(imageUri && eventName && eventDate && eventTime && (eventDescription.length > 20)) {
+        try {
+            const docRef = await addDoc(collection(db, "events"), {
+                eventName: eventName,
+                eventDate: eventDate,
+                eventTime: eventTime,
+                eventDescription: eventDescription,
+                posterUri: await useUpload(imageUri, 'images'),
+                createdAt: Timestamp.now(),
+                createdBy: {userEmail: auth.currentUser.email, userId: auth.currentUser.uid}
+            });
+            console.log("Document written with ID: ", docRef.id);
+            setImageUri(null); setEventDate(''); setEventDescription(''); setEventName(''); setEventTime(''); setImageAspect(null);
+            alert("Event added successfully");
+          } catch (e) {
+            console.error("Error adding document: ", e);
+          }
+    }
+    else{
+        alert("Please fill all the fields");
+    }
+        
   }
 
     return (
             <View style={styles.container}>
                 <Button title="Pick an image" onPress={pickImage} />
-                {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+                {imageUri && <Image source={{ uri: imageUri }} style={{height: 200, aspectRatio: imageAspect }} />}
                 <TextInput
                     placeholder="Event Name"
                     style={styles.input}
                     onChangeText={(text) => setEventName(text)}
+                    value={eventName}
                 />
                 <TextInput
                     placeholder="Event Date"
                     style={styles.input}
                     onChangeText={(text) => setEventDate(text)}
+                    value={eventDate}
                 />
                 <TextInput
                     placeholder="Event Time"
                     style={styles.input}
                     onChangeText={(text) => setEventTime(text)}
+                    value={eventTime}
                 />
                 <TextInput
                     multiline={true}
                     placeholder="Event Description"
                     style={[styles.input]}
                     onChangeText={(text) => setEventDescription(text)}
+                    value={eventDescription}
                 />
                 <View style={styles.buttonContainer}>
                 <Button
                     title="Add Event"
-                    onPress={()=>{docAdd(eventName, eventDate, eventTime, eventDescription)}}
+                    onPress={()=>{addEvent()}}
                     color={'white'}
                 />
                 </View>

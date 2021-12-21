@@ -1,11 +1,11 @@
-// import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, uploadBytes } from "firebase/storage";
+import { v4 as uuidv4 } from 'uuid';
 
 // const storage = getStorage();
 
-// function useUpload(path, filePath) {
+// function useUpload(path, file) {
 //     const storageRef = ref(storage, `${path}/` + 'lolo');
-//     // const uploadTask = uploadBytesResumable(storageRef, file);
-//     const uploadTask = storage.storageRef.putFile(filePath);
+//     const uploadTask = uploadBytesResumable(storageRef, file);
 
 //     // Listen for state changes, errors, and completion of the upload.
 //     uploadTask.on('state_changed',
@@ -51,3 +51,32 @@
 // }
 
 // export {useUpload}
+
+
+async function useUpload(uri, path) {
+    // Why are we using XMLHttpRequest? See:
+    // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+  
+    const fileRef = ref(getStorage(), `${path}/`+'jghjgjuyhvu78t78');
+    const result = await uploadBytes(fileRef, blob);
+  
+    // We're done with the blob, close and release it
+    blob.close();
+  
+    return await getDownloadURL(fileRef);
+  }
+
+  export {useUpload}

@@ -4,11 +4,25 @@ import { TextInput } from 'react-native'
 import {auth} from '../Backend/firebase'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import HomeTab from '../components/HomeTab';
+import { db } from '../Backend/firestore';
+import { collection, addDoc } from "firebase/firestore";
 
 
 const LoginScreen = ({navigation}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+
+    const addUserToDB = async (user) => {
+        try {
+            const docRef = await addDoc(collection(db, "users"), {
+              email: user.email,
+              uid: user.uid,
+            });
+            console.log("Document written with ID: ", docRef.id);
+          } catch (e) {
+            console.error("Error adding document: ", e);
+          }
+    }
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -26,6 +40,7 @@ const LoginScreen = ({navigation}) => {
         .then((userCredentials) => {
             const {user} = userCredentials
             console.log(user.email)
+            addUserToDB(user)
         })
         .catch(error => {
             alert(error)
