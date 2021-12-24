@@ -1,17 +1,12 @@
 import { db } from "./firestore";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {auth} from "firebase/auth";
+import {doc, getDoc} from "firebase/firestore";
+import { useState, useEffect } from "react";
 
-async function getUserInfo(userId) {
-    const colRef = collection(db, "users");
-    const q = query(colRef, where("uid", "==", userId));
-    var data = ''
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data());
-    data = doc.data()
-    return data
-    });
+async function getUserInfo(id) {
+    const docRef = doc(db, "users", id);
+    const data = await getDoc(docRef);
+    return data;
 }
 
 export { getUserInfo };

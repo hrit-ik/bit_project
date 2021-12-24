@@ -1,10 +1,11 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useContext, useEffect} from 'react'
 import { View, Text, TextInput, StyleSheet, Button, Image} from 'react-native'
 import * as ImagePicker from 'expo-image-picker';
 import {db, storage} from '../Backend/firestore'
 import { collection, addDoc, Timestamp } from "firebase/firestore"; 
 import { auth } from "../Backend/firebase";
 import { useUpload } from '../Hooks/useUpload';
+import { SettingsContext } from '../components/settingsContext';
 
 const Add = () => {
     const [imageUri, setImageUri] = useState(null);
@@ -13,6 +14,7 @@ const Add = () => {
     const [eventDate, setEventDate] = useState('');
     const [eventTime, setEventTime] = useState('');
     const [eventDescription, setEventDescription] = useState('');  
+    const {userData} = useContext(SettingsContext)
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -30,7 +32,7 @@ const Add = () => {
         setImageAspect(result.width/result.height);
     }
   };
-
+//   console.log(userData)
   const addEvent = async()=>{
     if(imageUri && eventName && eventDate && eventTime && (eventDescription.length > 20)) {
         try {
@@ -55,9 +57,11 @@ const Add = () => {
     }
         
   }
-
     return (
             <View style={styles.container}>
+                {userData && userData.adminOf.map((club, i)=>{
+                    return <Text key={i}>{club}</Text>
+                })}
                 <Button title="Pick an image" onPress={pickImage} />
                 {imageUri && <Image source={{ uri: imageUri }} style={{height: 200, aspectRatio: imageAspect }} />}
                 <TextInput

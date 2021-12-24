@@ -5,23 +5,29 @@ import {auth} from '../Backend/firebase'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import HomeTab from '../components/HomeTab';
 import { db } from '../Backend/firestore';
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({navigation, route}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
+    // const addUserToDB = async (user) => {
+    //     try {
+    //         const docRef = await addDoc(collection(db, "users"), {
+    //           email: user.email,
+    //           uid: user.uid,
+    //         });
+    //         console.log("Document written with ID: ", docRef.id);
+    //       } catch (e) {
+    //         console.error("Error adding document: ", e);
+    //       }
+    // }
     const addUserToDB = async (user) => {
-        try {
-            const docRef = await addDoc(collection(db, "users"), {
-              email: user.email,
-              uid: user.uid,
-            });
-            console.log("Document written with ID: ", docRef.id);
-          } catch (e) {
-            console.error("Error adding document: ", e);
-          }
+        const docRef = await setDoc(doc(db, "users", user.uid), {
+            email: user.email,
+            uid: user.uid,
+        });
     }
 
     useEffect(() => {

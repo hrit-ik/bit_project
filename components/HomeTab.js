@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Details from '../screens/details';
@@ -7,10 +7,15 @@ import Add from '../screens/add';
 import {Ionicons} from '@expo/vector-icons';
 import Home from '../screens/home';
 import { SettingsContext } from './settingsContext';
+import { auth } from '../Backend/firebase';
+import { getUserInfo } from '../Backend/getUserInfo';
+import {LoadingScreen} from '../screens/loadingScreen'
 
 const Tab = createBottomTabNavigator();
-const HomeTab = () => {
-  const [adminMode, setAdminMode]  = useContext(SettingsContext)
+const HomeTab = ({route}) => {
+  const {administrationState} = useContext(SettingsContext)
+  const [adminMode, setAdminMode]  = administrationState
+  const {userData} = route.params
     return (
         <Tab.Navigator 
         screenOptions={({ route })=>({
@@ -46,10 +51,10 @@ const HomeTab = () => {
           },
         })}
       >
-        <Tab.Screen name="Home" component={Home} options={{headerShown: false}}/>
-        <Tab.Screen name="Details" component={Details} />
-        {adminMode && <Tab.Screen name="Add" component={Add} />}
-        <Tab.Screen name="Settings" component={Settings} options={{ tabBarBadge: 3 }}/>
+        <Tab.Screen name="Home" component={Home} options={{headerShown: false}} initialParams={{userData}}/>
+        <Tab.Screen name="Details" component={Details} initialParams={{userData}}/>
+        {adminMode && <Tab.Screen name="Add" component={Add} initialParams={{userData}}/>}
+        {userData && <Tab.Screen name="Settings" component={Settings} options={{ tabBarBadge: 3 }} initialParams={{userData}}/>}
       </Tab.Navigator>
     )
 }

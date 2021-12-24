@@ -1,16 +1,29 @@
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import { View , Text, TouchableOpacity, StyleSheet, Switch} from 'react-native'
 import { auth } from '../Backend/firebase'
 import {signOut} from 'firebase/auth'
 import { SettingsContext } from '../components/settingsContext'
 import { getUserInfo } from '../Backend/getUserInfo'
 
-export default function Settings({navigation}) {
-    const [adminMode, setAdminMode]  = useContext(SettingsContext)
-    console.log(getUserInfo(auth?.currentUser?.uid))
+
+export default function Settings({route, navigation}) {
+    const {administrationState} = useContext(SettingsContext)
+    const user = auth.currentUser;
+    const [adminMode, setAdminMode]  = administrationState
     const toggleAdminMode = () => {
       setAdminMode(!adminMode)
     }
+    // const [userData, setUserData] = useState(null)
+    // if(user){
+    //     useEffect(() => {
+    //         getUserInfo(user.uid)
+    //         .then(doc => setUserData(doc.data()))
+    //     }, []);
+    // }
+    
+    const {userData} = route.params
+    console.log(userData)
+
     const handleSignOut = () => {
         signOut(auth)
         .then(
@@ -18,7 +31,7 @@ export default function Settings({navigation}) {
                 navigation.replace('Login')
             }
         )
-    }
+    } 
 
     return (
         <View style={styles.container}>
@@ -27,7 +40,7 @@ export default function Settings({navigation}) {
             <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
                 <Text>Sign Out</Text>
             </TouchableOpacity>
-            <View>
+            {/* {userData && userData.isAdmin && <View>
                 <Switch
                     trackColor={{ false: "#767577", true: "#81b0ff" }}
                     thumbColor={adminMode ? "#f5dd4b" : "#f4f3f4"}
@@ -35,7 +48,7 @@ export default function Settings({navigation}) {
                     onValueChange={toggleAdminMode}
                     value={adminMode}
                 />
-            </View>
+            </View>} */}
         </View>
     )
 }
