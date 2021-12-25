@@ -1,47 +1,32 @@
-import React, {useState, useContext, useEffect} from 'react'
+import React, {useContext} from 'react'
 import { View , Text, TouchableOpacity, StyleSheet, Switch} from 'react-native'
 import { auth } from '../Backend/firebase'
 import {signOut} from 'firebase/auth'
-import { SettingsContext } from '../components/settingsContext'
-import { getUserInfo } from '../Backend/getUserInfo'
-import { dataContext } from '../App'
+import { useStoreState, useStoreActions } from 'easy-peasy';
 
-
-export default function Settings({route, navigation}) {
-    const {administrationState} = useContext(SettingsContext)
-    // const {userData, setUserData, setIsLoggedIn, setLoading, setUserChecked} = useContext(dataContext)
-    const [adminMode, setAdminMode]  = administrationState
-    // useEffect(() => {
-    //     console.log(userData)
-    // }, [])
-    
-    // const toggleAdminMode = () => {
-    //   setAdminMode(!adminMode)
-    // }
-    // const [userData, setUserData] = useState(null)
-    // if(user){
-    //     useEffect(() => {
-    //         getUserInfo(user.uid)
-    //         .then(doc => setUserData(doc.data()))
-    //     }, []);
-    // }
+export default function Settings({route}) {
+    const setUserChecked = useStoreActions((actions) => actions.setUserChecked)
+    const setIsLoggedIn = useStoreActions((actions) => actions.setIsLoggedIn)
+    const isLoggedIn = useStoreState((state) => state.isLoggedIn)
+    const setLoading = useStoreActions((actions) => actions.setLoading)
+    const setUserData = useStoreActions((actions) => actions.setUserData)
+    const userData = useStoreState((state) => state.userData)
+    const userChecked = useStoreState((state) => state.userChecked)
+    const isAdmin = useStoreState((state) => state.isAdmin)
+    const setIsAdmin = useStoreActions((actions) => actions.setIsAdmin)
+    const loading = useStoreState((state) => state.loading)
 
     const handleSignOut = () => {
+        setIsAdmin(false)
         signOut(auth)
-        .then(
-            () => {
-                // navigation.replace('Login')
-                // setIsLoggedIn(false)
-                setLoading(true)
-                setUserData(null)
-            }
-        )
-    } 
+        .then(() => {setIsLoggedIn(false)})
+    }
 
     return (
         <View style={styles.container}>
             {/* <Text>Email: {auth.currentUser?.email}</Text>
             <Text>Id: {auth.currentUser?.uid}</Text> */}
+            {userData && <Text>{userData.email}</Text>}
             <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
                 <Text>Sign Out</Text>
             </TouchableOpacity>

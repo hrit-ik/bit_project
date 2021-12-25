@@ -6,15 +6,12 @@ import Settings from '../screens/settings';
 import Add from '../screens/add';
 import {Ionicons} from '@expo/vector-icons';
 import Home from '../screens/home';
-import { SettingsContext } from './settingsContext';
 import { auth } from '../Backend/firebase';
 import { getUserInfo } from '../Backend/getUserInfo';
 import {LoadingScreen} from '../screens/SplashScreen'
 
 const Tab = createBottomTabNavigator();
 const HomeTab = ({route}) => {
-  // const {administrationState} = useContext(SettingsContext)
-  // const [adminMode, setAdminMode]  = administrationState
     return (
         <Tab.Navigator 
         screenOptions={({ route })=>({

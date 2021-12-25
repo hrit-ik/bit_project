@@ -1,67 +1,52 @@
-import * as React from 'react';
-import { useEffect, useState, useContext, createContext } from 'react';
+import React from 'react';
+import { createContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import EventDetails from './screens/event-details';
-import LoginScreen from './screens/LoginScreen';
-import HomeTab from './components/HomeTab';
-import { SettingsProvider } from './components/settingsContext';
-import {auth} from './Backend/firebase';
-import SplashScreen from './screens/SplashScreen';
-import { getUserInfo } from './Backend/getUserInfo';
-import { onAuthStateChanged } from "firebase/auth";
-import Skeleton from './screens/LoadingScreen';
+import { createStore, action } from 'easy-peasy';
+import { StoreProvider } from 'easy-peasy';
+import { useStoreState, useStoreActions } from 'easy-peasy';
+import Navigation from './Navigation';
 
 const Stack = createNativeStackNavigator();
 export const dataContext = createContext();
 
-export default function App() {
-  const [userChecked, setUserChecked] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [userData, setUserData] = useState(null)
-  // const [userData, setUserData] = useState(null)
-  // const {userDataState} = useContext(SettingsProvider)
-  // const [userData, setUserData] = userDataState
-
-  onAuthStateChanged(auth, user=>{
-    if (user) {
-      getUserInfo(user.uid)
-        .then(doc => setUserData(doc.data()))
-        .then(() => {setIsLoggedIn(true); setLoading(false); })
-        .then(() => setUserChecked(true))
-    }
-    else{
-      setUserChecked(true)
-      setIsLoggedIn(false)
-    }
+const store = createStore({
+  todos: ['Create store', 'Wrap application', 'Use store'],
+  addTodo: action((state, payload) => {
+    state.todos.push(payload);
+  }),
+  userChecked: false,
+  setUserChecked: action((state, payload) => {
+    state.userChecked = payload;
+  }),
+  isLoggedIn: false,
+  setIsLoggedIn: action((state, payload) => {
+    state.isLoggedIn = payload;
+  }),
+  loading: false,
+  setLoading: action((state, payload) => {
+    state.loading = payload;
+  }),
+  userData: null,
+  setUserData: action((state, payload) => {
+    state.userData = payload;
+  }),
+  isAdmin: false,
+  setIsAdmin: action((state, payload) => {
+    state.isAdmin = payload;
+  }),
+  reset: action((state) => {
+    state.userData = null;
+    state.isLoggedIn = false;
+    state.isAdmin = false;
   })
+});
 
-
+export default function App() {
   return (
-    <dataContext.Provider >
-      <SettingsProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
-          {!userChecked? (<Stack.Screen name="SpashScreen" component={SplashScreen} options={{headerShown: false}}/>):
-          (!isLoggedIn?(<Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}} />):
-          (loading && !userData?(<Stack.Screen name="skeleton" component={Skeleton} options={{headerShown: false}}/>): (
-            <>
-              <Stack.Screen name="HomeTab" component={HomeTab} options={{headerShown: false}}/>
-              <Stack.Screen name="EventDetails" component={EventDetails} 
-                options={{
-                    headerShown: false
-                }}
-            />
-            </>
-          )))
-
-        }
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SettingsProvider>
-    </dataContext.Provider>
+    <StoreProvider store={store}>
+      <Navigation />
+    </StoreProvider>
   );
 }
 

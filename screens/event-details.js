@@ -6,8 +6,8 @@ import img2 from '../assets/images/img2.jpeg';
 
 export default function EventDetails({navigation, route}) {
     // navigation.tabBar = () => null
-    const {userData} = route.params
-    console.log(userData)
+    // const {userData} = route.params
+    // console.log(userData)
     const navigateBack = () => {
         navigation.goBack();
     }

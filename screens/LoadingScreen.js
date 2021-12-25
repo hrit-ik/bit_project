@@ -1,4 +1,4 @@
-import SkeletonContent from 'react-native-skeleton-content';
+// import SkeletonContent from 'react-native-skeleton-content';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function Skeleton() {

@@ -6,11 +6,30 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthState
 import HomeTab from '../components/HomeTab';
 import { db } from '../Backend/firestore';
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import { useStoreState, useStoreActions } from 'easy-peasy';
 
 
 const LoginScreen = ({navigation, route}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const setUserChecked = useStoreActions((actions) => actions.setUserChecked)
+    const setIsLoggedIn = useStoreActions((actions) => actions.setIsLoggedIn)
+    const isLoggedIn = useStoreState((state) => state.isLoggedIn)
+    const setLoading = useStoreActions((actions) => actions.setLoading)
+    const setUserData = useStoreActions((actions) => actions.setUserData)
+    const userData = useStoreState((state) => state.userData)
+    const userChecked = useStoreState((state) => state.userChecked)
+    const isAdmin = useStoreState((state) => state.isAdmin)
+    const setIsAdmin = useStoreActions((actions) => actions.setIsAdmin)
+    const loading = useStoreState((state) => state.loading)
+
+    useEffect(() => {
+        console.log('isLoggedIn => ', isLoggedIn)
+        console.log('userChecked => ', userChecked)
+        console.log('loading => ', loading)
+        console.log('userData => ', userData)
+        console.log('isAdmin => ', isAdmin)
+    } , [])
 
     // const addUserToDB = async (user) => {
     //     try {
@@ -59,6 +78,7 @@ const LoginScreen = ({navigation, route}) => {
             const {user} = userCredentials
             console.log('logged in with:  '+user.email)
         })
+        .then(() => {setIsLoggedIn(true)})
         .catch(error => {
             alert(error)
         })
