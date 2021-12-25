@@ -9,7 +9,7 @@ import Home from '../screens/home';
 import { SettingsContext } from './settingsContext';
 import { auth } from '../Backend/firebase';
 import { getUserInfo } from '../Backend/getUserInfo';
-import {LoadingScreen} from '../screens/loadingScreen'
+import {LoadingScreen} from '../screens/SplashScreen'
 
 const Tab = createBottomTabNavigator();
 const HomeTab = ({route}) => {

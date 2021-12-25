@@ -30,16 +30,16 @@ const LoginScreen = ({navigation, route}) => {
         });
     }
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                navigation.replace('HomeTab')
-            } else {
-                console.log('user not logged in')
-            }
-            return unsubscribe
-        })
-    }, [])
+    // useEffect(() => {
+    //     const unsubscribe = onAuthStateChanged(auth, (user) => {
+    //         if (user) {
+    //             navigation.replace('HomeTab')
+    //         } else {
+    //             console.log('user not logged in')
+    //         }
+    //         return unsubscribe
+    //     })
+    // }, [])
 
     const handleSignUp = () => {
         createUserWithEmailAndPassword(auth, email, password)
