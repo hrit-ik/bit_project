@@ -4,15 +4,20 @@ import { auth } from '../Backend/firebase'
 import {signOut} from 'firebase/auth'
 import { SettingsContext } from '../components/settingsContext'
 import { getUserInfo } from '../Backend/getUserInfo'
+import { dataContext } from '../App'
 
 
 export default function Settings({route, navigation}) {
     const {administrationState} = useContext(SettingsContext)
-    const user = auth.currentUser;
+    // const {userData, setUserData, setIsLoggedIn, setLoading, setUserChecked} = useContext(dataContext)
     const [adminMode, setAdminMode]  = administrationState
-    const toggleAdminMode = () => {
-      setAdminMode(!adminMode)
-    }
+    // useEffect(() => {
+    //     console.log(userData)
+    // }, [])
+    
+    // const toggleAdminMode = () => {
+    //   setAdminMode(!adminMode)
+    // }
     // const [userData, setUserData] = useState(null)
     // if(user){
     //     useEffect(() => {
@@ -20,15 +25,15 @@ export default function Settings({route, navigation}) {
     //         .then(doc => setUserData(doc.data()))
     //     }, []);
     // }
-    
-    const {userData} = route.params
-    console.log(userData)
 
     const handleSignOut = () => {
         signOut(auth)
         .then(
             () => {
-                navigation.replace('Login')
+                // navigation.replace('Login')
+                // setIsLoggedIn(false)
+                setLoading(true)
+                setUserData(null)
             }
         )
     } 

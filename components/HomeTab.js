@@ -13,9 +13,8 @@ import {LoadingScreen} from '../screens/SplashScreen'
 
 const Tab = createBottomTabNavigator();
 const HomeTab = ({route}) => {
-  const {administrationState} = useContext(SettingsContext)
-  const [adminMode, setAdminMode]  = administrationState
-  const {userData} = route.params
+  // const {administrationState} = useContext(SettingsContext)
+  // const [adminMode, setAdminMode]  = administrationState
     return (
         <Tab.Navigator 
         screenOptions={({ route })=>({
@@ -51,10 +50,10 @@ const HomeTab = ({route}) => {
           },
         })}
       >
-        <Tab.Screen name="Home" component={Home} options={{headerShown: false}} initialParams={{userData}}/>
-        <Tab.Screen name="Details" component={Details} initialParams={{userData}}/>
-        {adminMode && <Tab.Screen name="Add" component={Add} initialParams={{userData}}/>}
-        {userData && <Tab.Screen name="Settings" component={Settings} options={{ tabBarBadge: 3 }} initialParams={{userData}}/>}
+        <Tab.Screen name="Home" component={Home} options={{headerShown: false}}/>
+        <Tab.Screen name="Details" component={Details}/>
+        <Tab.Screen name="Settings" component={Settings} options={{ tabBarBadge: 3 }}/>
+        {/* {adminMode && <Tab.Screen name="Add" component={Add} initialParams={{userData}}/>} */}
       </Tab.Navigator>
     )
 }

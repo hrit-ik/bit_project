@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 
-const LoadingScreen = ({route, navigation}) => {
+const SplashScreen = ({route, navigation}) => {
     return (
         <View style={styles.container}>
             <Text>loading</Text>
@@ -9,7 +9,7 @@ const LoadingScreen = ({route, navigation}) => {
     )
 }
 
-export default LoadingScreen
+export default SplashScreen
 
 const styles = StyleSheet.create({
     container: {
