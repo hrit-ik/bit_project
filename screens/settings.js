@@ -19,7 +19,12 @@ export default function Settings({route}) {
     const handleSignOut = () => {
         setIsAdmin(false)
         signOut(auth)
-        .then(() => {setIsLoggedIn(false)})
+        .then(() => {
+            // setUserChecked(false)
+            // setIsLoggedIn(false)
+            setUserData(null)
+            // setLoading(false)   
+        })
     }
 
     return (

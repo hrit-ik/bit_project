@@ -12,6 +12,8 @@ import { getUserInfo } from './Backend/getUserInfo';
 import { onAuthStateChanged } from "firebase/auth";
 import Skeleton from './screens/LoadingScreen';
 import { useStoreState, useStoreActions } from 'easy-peasy';
+import AuthStack from './components/AuthStack';
+import AppStack from './components/AppStack';
 
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
@@ -39,42 +41,22 @@ const Navigation = () => {
       getUserInfo(user.uid)
         .then(doc => setUserData(doc.data()))
         // .then(() => {setIsLoggedIn(true); setLoading(false); })
-        .then(() => {setIsLoggedIn(true); setLoading(false); })
-        .then(() => setUserChecked(true))
+        // .then(() => {setIsLoggedIn(true); setLoading(false); })
+        // .then(() => setUserChecked(true))
     }
     else{
-        setUserData(null)
-        setUserChecked(true)
-        setIsLoggedIn(false)
+        // setUserData(null)
+        // setUserChecked(true)
+        // setIsLoggedIn(false)
     }
   })
 
-
-
-    return (
-        <NavigationContainer>
-            <Stack.Navigator>
-            {!userChecked? (<Stack.Screen name="SpashScreen" component={SplashScreen} options={{headerShown: false}}/>):
-            (!isLoggedIn?(
-              <>
-                <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}} />
-              </>
-            ):
-            (loading && !userData?(<Stack.Screen name="skeleton" component={Skeleton} options={{headerShown: false}}/>): (
-                <>
-                <Stack.Screen name="HomeTab" component={HomeTab} options={{headerShown: false}}/>
-                <Stack.Screen name="EventDetails" component={EventDetails} 
-                    options={{
-                        headerShown: false
-                    }}
-                />
-                </>
-            )))
-
-            }
-            </Stack.Navigator>
-        </NavigationContainer>
+  return(
+    <NavigationContainer>
+      {userData? <AppStack /> : <AuthStack />}
+    </NavigationContainer>
     )
+
 }
 
 export default Navigation
