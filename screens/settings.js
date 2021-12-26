@@ -5,24 +5,25 @@ import {signOut} from 'firebase/auth'
 import { useStoreState, useStoreActions } from 'easy-peasy';
 
 export default function Settings({route}) {
-    const setUserChecked = useStoreActions((actions) => actions.setUserChecked)
-    const setIsLoggedIn = useStoreActions((actions) => actions.setIsLoggedIn)
-    const isLoggedIn = useStoreState((state) => state.isLoggedIn)
     const setLoading = useStoreActions((actions) => actions.setLoading)
     const setUserData = useStoreActions((actions) => actions.setUserData)
     const userData = useStoreState((state) => state.userData)
-    const userChecked = useStoreState((state) => state.userChecked)
-    const isAdmin = useStoreState((state) => state.isAdmin)
-    const setIsAdmin = useStoreActions((actions) => actions.setIsAdmin)
-    const loading = useStoreState((state) => state.loading)
+    const adminMode = useStoreState((state) => state.adminMode)
+    const setAdminMode = useStoreActions((actions) => actions.setAdminMode)
+
+    const toggleAdminMode = () => {
+        setAdminMode(!adminMode)
+      }
 
     const handleSignOut = () => {
-        setIsAdmin(false)
         signOut(auth)
         .then(() => {
             // setUserChecked(false)
             // setIsLoggedIn(false)
             setUserData(null)
+            setLoading(true)
+            // setUserChecked(true)
+            // setSignedOut(true)
             // setLoading(false)   
         })
     }
@@ -35,7 +36,7 @@ export default function Settings({route}) {
             <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
                 <Text>Sign Out</Text>
             </TouchableOpacity>
-            {/* {userData && userData.isAdmin && <View>
+            {userData && userData.isAdmin && <View>
                 <Switch
                     trackColor={{ false: "#767577", true: "#81b0ff" }}
                     thumbColor={adminMode ? "#f5dd4b" : "#f4f3f4"}
@@ -43,7 +44,7 @@ export default function Settings({route}) {
                     onValueChange={toggleAdminMode}
                     value={adminMode}
                 />
-            </View>} */}
+            </View>}
         </View>
     )
 }

@@ -1,20 +1,12 @@
 import React from 'react';
 import { createContext } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createStore, action } from 'easy-peasy';
 import { StoreProvider } from 'easy-peasy';
-import { useStoreState, useStoreActions } from 'easy-peasy';
 import Navigation from './Navigation';
 
-const Stack = createNativeStackNavigator();
 export const dataContext = createContext();
 
 const store = createStore({
-  todos: ['Create store', 'Wrap application', 'Use store'],
-  addTodo: action((state, payload) => {
-    state.todos.push(payload);
-  }),
   userChecked: false,
   setUserChecked: action((state, payload) => {
     state.userChecked = payload;
@@ -23,7 +15,7 @@ const store = createStore({
   setIsLoggedIn: action((state, payload) => {
     state.isLoggedIn = payload;
   }),
-  loading: false,
+  loading: true,
   setLoading: action((state, payload) => {
     state.loading = payload;
   }),
@@ -35,11 +27,14 @@ const store = createStore({
   setIsAdmin: action((state, payload) => {
     state.isAdmin = payload;
   }),
-  reset: action((state) => {
-    state.userData = null;
-    state.isLoggedIn = false;
-    state.isAdmin = false;
-  })
+  signedOut: false,
+  setSignedOut: action((state, payload) => {
+    state.signedOut = payload;
+  }),
+  adminMode: false,
+  setAdminMode: action((state, payload) => {
+    state.adminMode = payload;
+  }),
 });
 
 export default function App() {

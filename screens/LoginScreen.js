@@ -46,6 +46,8 @@ const LoginScreen = ({navigation, route}) => {
         const docRef = await setDoc(doc(db, "users", user.uid), {
             email: user.email,
             uid: user.uid,
+            isAdmin: false,
+            adminOf: [],
         });
     }
 

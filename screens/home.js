@@ -6,16 +6,11 @@ import { useStoreState, useStoreActions } from 'easy-peasy';
 
 const Tab = createBottomTabNavigator();
 export default function Home({navigation}) {
-    const addTodo = useStoreActions((actions) => actions.addTodo);
     return (
         <View style={styles.container}>
             <Button
                 title="Open the Post"
                 onPress={() => navigation.navigate('EventDetails')}
-            />
-            <Button
-                title="add chump to todos"
-                onPress={() => addTodo('chump')}
             />
         </View>
     )

@@ -16,44 +16,47 @@ import AuthStack from './components/AuthStack';
 import AppStack from './components/AppStack';
 
 const Stack = createNativeStackNavigator();
+const Loading = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Splash" component={SplashScreen} />
+    </Stack.Navigator>
+  );
+}
 const Navigation = () => {
     // const todos = useStoreState((state) => state.todos);
     const userChecked = useStoreState((state) => state.userChecked);
     const isLoggedIn = useStoreState((state) => state.isLoggedIn);
-    const loading = useStoreState((state) => state.loading);
+    // const loading = useStoreState((state) => state.loading);
     const userData = useStoreState((state) => state.userData);
     const setUserChecked = useStoreActions((actions) => actions.setUserChecked);
     const setIsLoggedIn = useStoreActions((actions) => actions.setIsLoggedIn);
-    const setLoading = useStoreActions((actions) => actions.setLoading);
     const setUserData = useStoreActions((actions) => actions.setUserData);
-    const isAdmin = useStoreState((state) => state.isAdmin);
-    const setIsAdmin = useStoreActions((actions) => actions.setIsAdmin);
+    const loading = useStoreState((state) => state.loading);
+    const setLoading = useStoreActions((actions) => actions.setLoading);
 
-//     const [userChecked, setUserChecked] = useState(false);
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
-//   const [loading, setLoading] = useState(true);
-//   const [userData, setUserData] = useState(null)
-  // const [userData, setUserData] = useState(null)
-  // const {userDataState} = useContext(SettingsProvider)
-  // const [userData, setUserData] = userDataState
   onAuthStateChanged(auth, user=>{
     if (user) {
       getUserInfo(user.uid)
         .then(doc => setUserData(doc.data()))
+        // .then(() => setUserChecked(true))
+        .then(() => setLoading(false))
         // .then(() => {setIsLoggedIn(true); setLoading(false); })
         // .then(() => {setIsLoggedIn(true); setLoading(false); })
         // .then(() => setUserChecked(true))
     }
     else{
-        // setUserData(null)
-        // setUserChecked(true)
-        // setIsLoggedIn(false)
+      setUserChecked(true);
+      setLoading(false);
+      // if(signedOut){
+      //   setUserData(null)
+      //   setSignedOut(false)
+      // }
     }
   })
-
   return(
     <NavigationContainer>
-      {userData? <AppStack /> : <AuthStack />}
+      {loading? <Loading/>: (userData? <AppStack /> : <AuthStack />)}
     </NavigationContainer>
     )
 

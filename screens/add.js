@@ -5,6 +5,7 @@ import {db, storage} from '../Backend/firestore'
 import { collection, addDoc, Timestamp } from "firebase/firestore"; 
 import { auth } from "../Backend/firebase";
 import { useUpload } from '../Hooks/useUpload';
+import { useStoreState, useStoreActions } from 'easy-peasy';
 
 const Add = () => {
     const [imageUri, setImageUri] = useState(null);
@@ -13,6 +14,8 @@ const Add = () => {
     const [eventDate, setEventDate] = useState('');
     const [eventTime, setEventTime] = useState('');
     const [eventDescription, setEventDescription] = useState('');  
+    const userData = useStoreState((state) => state.userData);
+    const setUserData = useStoreActions((actions) => actions.setUserData);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library

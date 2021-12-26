@@ -9,9 +9,11 @@ import Home from '../screens/home';
 import { auth } from '../Backend/firebase';
 import { getUserInfo } from '../Backend/getUserInfo';
 import {LoadingScreen} from '../screens/SplashScreen'
+import { useStoreState } from 'easy-peasy';
 
 const Tab = createBottomTabNavigator();
-const HomeTab = ({route}) => {
+const HomeTab = () => {
+  const adminMode = useStoreState((state) => state.adminMode);
     return (
         <Tab.Navigator 
         screenOptions={({ route })=>({
@@ -49,8 +51,8 @@ const HomeTab = ({route}) => {
       >
         <Tab.Screen name="Home" component={Home} options={{headerShown: false}}/>
         <Tab.Screen name="Details" component={Details}/>
+        {adminMode && <Tab.Screen name="Add" component={Add} />}
         <Tab.Screen name="Settings" component={Settings} options={{ tabBarBadge: 3 }}/>
-        {/* {adminMode && <Tab.Screen name="Add" component={Add} initialParams={{userData}}/>} */}
       </Tab.Navigator>
     )
 }
