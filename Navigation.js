@@ -59,13 +59,15 @@ const Navigation = () => {
   onAuthStateChanged(auth, user=>{
     if (user) {
       if(isAnonymous){
-        getUserInfo(-1)
-          .then(doc=>{ setUserData(doc);})
+        getUserInfo('anonymous')
+          .then(doc=>{ setUserData(doc.data());})
           .then(()=>{setLoading(false);})
       }
-      getUserInfo(user.uid)
-        .then(doc => setUserData(doc.data()))
-        .then(() => setLoading(false))
+      else{
+        getUserInfo(user.uid)
+          .then(doc => setUserData(doc.data()))
+          .then(() => setLoading(false))
+      }
     }
     else{
       setUserChecked(true);
