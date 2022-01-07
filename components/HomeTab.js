@@ -18,11 +18,11 @@ const HomeTab = () => {
         <Tab.Navigator 
         screenOptions={({ route })=>({
           tabBarStyle: { 
-            borderTopRightRadius: 50,
-            height: 70,
-            paddingBottom: 20,
+            // borderTopRightRadius: 50,
+            // height: 70,
+            // paddingBottom: 20,
             paddingTop: 10,
-            position: 'absolute',
+            // position: 'absolute',
             shadowOffset: { width: 0, height: -7 },
             shadowRadius: 20,
             shadowColor: 'rgba(0,0,0, 1)',
