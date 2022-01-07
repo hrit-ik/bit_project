@@ -10,6 +10,9 @@ export default function Settings({route}) {
     const userData = useStoreState((state) => state.userData)
     const adminMode = useStoreState((state) => state.adminMode)
     const setAdminMode = useStoreActions((actions) => actions.setAdminMode)
+    const setIsLoggedIn = useStoreActions((actions) => actions.setIsLoggedIn)
+    const isAnonymous = useStoreState((state) => state.isAnonymous)
+    const setIsAnonymous = useStoreActions((actions) => actions.setIsAnonymous)
 
     const toggleAdminMode = () => {
         setAdminMode(!adminMode)
@@ -20,11 +23,10 @@ export default function Settings({route}) {
         .then(() => {
             // setUserChecked(false)
             // setIsLoggedIn(false)
+            setIsLoggedIn(false);
             setUserData(null)
             setLoading(true)
-            // setUserChecked(true)
-            // setSignedOut(true)
-            // setLoading(false)   
+            if(isAnonymous) {setIsAnonymous(false)}
         })
     }
 

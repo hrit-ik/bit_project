@@ -15,6 +15,10 @@ const store = createStore({
   setIsLoggedIn: action((state, payload) => {
     state.isLoggedIn = payload;
   }),
+  isAnonymous: false,
+  setIsAnonymous: action((state, payload) => {
+    state.isAnonymous = payload;
+  }),
   loading: true,
   setLoading: action((state, payload) => {
     state.loading = payload;
@@ -34,6 +38,10 @@ const store = createStore({
   adminMode: false,
   setAdminMode: action((state, payload) => {
     state.adminMode = payload;
+  }),
+  clubs: [],
+  setClubs: action((state, payload) => {
+    state.clubs = payload;
   }),
 });
 

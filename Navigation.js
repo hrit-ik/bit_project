@@ -14,6 +14,8 @@ import Skeleton from './screens/LoadingScreen';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import AuthStack from './components/AuthStack';
 import AppStack from './components/AppStack';
+import { db } from './Backend/firestore';
+import { collection, getDocs } from "firebase/firestore"; 
 
 const Stack = createNativeStackNavigator();
 const Loading = () => {
@@ -34,29 +36,45 @@ const Navigation = () => {
     const setUserData = useStoreActions((actions) => actions.setUserData);
     const loading = useStoreState((state) => state.loading);
     const setLoading = useStoreActions((actions) => actions.setLoading);
+    const clubs = useStoreState((state) => state.clubs);
+    const setClubs = useStoreActions((actions) => actions.setClubs);
+    const isAnonymous = useStoreState((state) => state.isAnonymous);
+
+  useEffect(() => {
+    async function getClubs() {
+      var data = []
+      const querySnapshot = await getDocs(collection(db, "clubs"));
+      querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data());
+      data.push({...doc.data(),id:doc.id});
+      });
+      console.log(data);
+      setClubs(data);
+      setLoading(false);
+    }
+    getClubs();
+  } , []);
 
   onAuthStateChanged(auth, user=>{
     if (user) {
+      if(isAnonymous){
+        getUserInfo(-1)
+          .then(doc=>{ setUserData(doc);})
+          .then(()=>{setLoading(false);})
+      }
       getUserInfo(user.uid)
         .then(doc => setUserData(doc.data()))
-        // .then(() => setUserChecked(true))
         .then(() => setLoading(false))
-        // .then(() => {setIsLoggedIn(true); setLoading(false); })
-        // .then(() => {setIsLoggedIn(true); setLoading(false); })
-        // .then(() => setUserChecked(true))
     }
     else{
       setUserChecked(true);
       setLoading(false);
-      // if(signedOut){
-      //   setUserData(null)
-      //   setSignedOut(false)
-      // }
     }
   })
   return(
     <NavigationContainer>
-      {loading? <Loading/>: (userData? <AppStack /> : <AuthStack />)}
+      {loading ? <Loading/>: (isLoggedIn? <AppStack /> : <AuthStack />)}
     </NavigationContainer>
     )
 

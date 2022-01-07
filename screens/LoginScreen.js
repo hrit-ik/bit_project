@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { StyleSheet, Text, View, KeyboardAvoidingView, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, KeyboardAvoidingView, TouchableOpacity, Image, Button } from 'react-native'
 import { TextInput } from 'react-native'
 import {auth} from '../Backend/firebase'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
@@ -7,7 +7,7 @@ import HomeTab from '../components/HomeTab';
 import { db } from '../Backend/firestore';
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { useStoreState, useStoreActions } from 'easy-peasy';
-
+import { signInAnonymously } from "firebase/auth";
 
 const LoginScreen = ({navigation, route}) => {
     const [email, setEmail] = useState('')
@@ -22,6 +22,7 @@ const LoginScreen = ({navigation, route}) => {
     const isAdmin = useStoreState((state) => state.isAdmin)
     const setIsAdmin = useStoreActions((actions) => actions.setIsAdmin)
     const loading = useStoreState((state) => state.loading)
+    const setIsAnonymous = useStoreActions((actions) => actions.setIsAnonymous)
 
     useEffect(() => {
         console.log('isLoggedIn => ', isLoggedIn)
@@ -68,6 +69,7 @@ const LoginScreen = ({navigation, route}) => {
             const {user} = userCredentials
             console.log(user.email)
             addUserToDB(user)
+            setIsAnonymous(false)
         })
         .catch(error => {
             alert(error)
@@ -79,8 +81,21 @@ const LoginScreen = ({navigation, route}) => {
         .then((userCredentials) => {
             const {user} = userCredentials
             console.log('logged in with:  '+user.email)
+            setIsAnonymous(false)
         })
         .then(() => {setIsLoggedIn(true)})
+        .catch(error => {
+            alert(error)
+        })
+    }
+
+    const handleAnonymousLogin = () => {
+        signInAnonymously(auth)
+        .then(console.log('logged in anonymously'))
+        .then(() => {
+            setIsAnonymous(true)
+            setIsLoggedIn(true)
+        })
         .catch(error => {
             alert(error)
         })
@@ -125,6 +140,10 @@ const LoginScreen = ({navigation, route}) => {
                     >
                         <Text style={[styles.buttonText, styles.signupButtonText]}>Sign Up</Text>
                     </TouchableOpacity>
+                    <Button 
+                        title="Continue w/o login"
+                        onPress={() => {handleAnonymousLogin()}}
+                    />
                 </View>
             </KeyboardAvoidingView>
     )

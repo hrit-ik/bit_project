@@ -9,7 +9,8 @@ export default function AppStack(){
             <Stack.Screen name="HomeTab" component={HomeTab} options={{headerShown: false}}/>
             <Stack.Screen name="EventDetails" component={EventDetails} 
                 options={{
-                    headerShown: false
+                    headerShown: false,
+                    tabBarStyle: {display: 'none'}
                 }}
             />
         </Stack.Navigator>
