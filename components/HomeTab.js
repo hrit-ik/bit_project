@@ -13,67 +13,6 @@ import { useStoreState, useStoreActions } from 'easy-peasy';
 import { StyleSheet } from 'react-native';
 import AnimatedTabBar, {TabsConfig, BubbleTabBarItemConfig} from '@gorhom/animated-tabbar';
 
-
-
-const tabs = {
-  Home: { // < Screen name
-    labelStyle: {
-      color: '#5B37B7',
-    },
-    icon: {
-      component: ()=> <Ionicons name="ios-home" size={24} color={tabState[0]? "#5B37B7":"#000"} />,
-      activeColor: 'rgba(91,55,183,1)',
-      inactiveColor: 'rgba(0,0,0,1)',
-    },
-    background: {
-      activeColor: 'rgba(223,215,243,1)',
-      inactiveColor: 'rgba(223,215,243,0)',
-    },
-  },
-  Details: { // < Screen name
-    labelStyle: {
-      color: '#5B37B7',
-    },
-    icon: {
-      component: ()=> <Ionicons name="ios-list" size={24} color={tabState[1]? "#5B37B7":"#000"} />,
-      activeColor: 'rgba(91,55,183,1)',
-      inactiveColor: 'rgba(0,0,0,1)',
-    },
-    background: {
-      activeColor: 'rgba(223,215,243,1)',
-      inactiveColor: 'rgba(223,215,243,0)',
-    },
-  },
-  Add: { // < Screen name
-    labelStyle: {
-      color: '#5B37B7',
-    },
-    icon: {
-      component: ()=> <Ionicons name="ios-add-circle" size={24} color={tabState[2]? "#5B37B7":"#000"} />,
-      activeColor: 'rgba(91,55,183,1)',
-      inactiveColor: 'rgba(0,0,0,1)',
-    },
-    background: {
-      activeColor: 'rgba(223,215,243,1)',
-      inactiveColor: 'rgba(223,215,243,0)',
-    },
-  },
-  Settings: { // < Screen name
-    labelStyle: {
-      color: '#5B37B7',
-    },
-    icon: {
-      component: ()=> <Ionicons name="person" size={24} color={tabState[3]? "#5B37B7":"#000"} />,
-      activeColor: 'rgba(91,55,183,1)',
-      inactiveColor: 'rgba(0,0,0,1)',
-    },
-    background: {
-      activeColor: 'rgba(223,215,243,1)',
-      inactiveColor: 'rgba(223,215,243,0)',
-    },
-  },
-};
-
 const Tab = createBottomTabNavigator();
 const HomeTab = () => {
   const adminMode = useStoreState((state) => state.adminMode);
