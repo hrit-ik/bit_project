@@ -4,7 +4,7 @@ import { auth } from '../Backend/firebase'
 import {signOut} from 'firebase/auth'
 import { useStoreState, useStoreActions } from 'easy-peasy';
 
-export default function Settings({route}) {
+export default function Settings({route, navigation}) {
     const setLoading = useStoreActions((actions) => actions.setLoading)
     const setUserData = useStoreActions((actions) => actions.setUserData)
     const userData = useStoreState((state) => state.userData)
@@ -47,9 +47,9 @@ export default function Settings({route}) {
                     value={adminMode}
                 />
             </View>}
-            <TouchableOpacity style={styles.editEvents} onPress={() => {}}>
+            {userData && userData.isAdmin && <TouchableOpacity style={styles.editEvents} onPress={() => {navigation.navigate('EditEventsScreen')}}>
                 <Text>Edit Events</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>}
         </View>
     )
 }

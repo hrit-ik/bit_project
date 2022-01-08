@@ -43,6 +43,10 @@ const store = createStore({
   setClubs: action((state, payload) => {
     state.clubs = payload;
   }),
+  events: [],
+  setEvents: action((state, payload) => {
+    state.events = payload;
+  }),
 });
 
 export default function App() {

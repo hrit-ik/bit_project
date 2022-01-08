@@ -10,8 +10,8 @@ import { auth } from '../Backend/firebase';
 import { getUserInfo } from '../Backend/getUserInfo';
 import {LoadingScreen} from '../screens/SplashScreen'
 import { useStoreState, useStoreActions } from 'easy-peasy';
-import { StyleSheet } from 'react-native';
 import AnimatedTabBar, {TabsConfig, BubbleTabBarItemConfig} from '@gorhom/animated-tabbar';
+import ProfileStack from '../Stacks/ProfileStack';
 
 const Tab = createBottomTabNavigator();
 const MainTabs = () => {
@@ -54,7 +54,9 @@ const MainTabs = () => {
         <Tab.Screen name="Home" component={Home} options={{headerShown: false}}/>
         <Tab.Screen name="Details" component={Details}/>
         {adminMode && <Tab.Screen name="Add" component={Add} />}
-        <Tab.Screen name="Settings" component={Settings} options={{ tabBarBadge: 3 }}/>
+        {/* {adminMode && <Tab.Screen name="Add" component={AddStack} />} */}
+        {/* <Tab.Screen name="Settings" component={Settings} options={{ tabBarBadge: 3 }}/> */}
+        <Tab.Screen name="Settings" component={ProfileStack} options={{ tabBarBadge: 3 }}/>
       </Tab.Navigator>
     )
 }

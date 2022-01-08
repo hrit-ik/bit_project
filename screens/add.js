@@ -26,6 +26,7 @@ const Add = () => {
     const userData = useStoreState((state) => state.userData);
     const allowedClubs = clubs.filter(club => userData.adminOf.includes(club.name));
     const [modalVisible, setModalVisible] = useState(false);
+    const events = useStoreState((state) => state.events);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -65,7 +66,10 @@ const Add = () => {
             })
             const clubRef = doc(db, "clubs", allowedClubs.find(o => o.name == selectedValue)?.id);
             await updateDoc(clubRef, {
-                events: [{eventId: docRef?.id, uplodedBy: auth?.currentUser?.email, uploaderId: auth?.currentUser?.uid}]
+                events: [...events, {eventId: docRef?.id, uplodedBy: auth?.currentUser?.email, uploaderId: auth?.currentUser?.uid}]
+            })
+            await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                uploadedEvents: [...(userData?.uploadedEvents), {id: docRef?.id, eventName: eventName}]
             })
             console.log("Document written with ID: ", docRef.id);
             setImageUri(null); setEventDate(''); setEventDescription(''); setEventName(''); setEventTime(''); setImageAspect(null);

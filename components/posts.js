@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import { Image,View, Text, TouchableOpacity, FlatList, Dimensions, StyleSheet, TouchableWithoutFeedback} from "react-native";
 import { ActivityIndicator } from "react-native";
 import { db } from "../Backend/firestore";
-import { collection , query, where, getDocs } from "firebase/firestore";
+import { collection , query, where, getDocs, onSnapshot } from "firebase/firestore";
 import FullImage from "./FullImage";
 import { useStoreState, useStoreActions } from 'easy-peasy';
 
@@ -18,6 +18,7 @@ export default function Posts({navigation}){
     const [loading, setLoading] = useState(true); // Setting Initial loading to true on component mount
     const [posts, setPosts] = useState([]); // Initial empty array of Posts
     const clubs = useStoreState((state) => state.clubs);
+    const setEvents = useStoreActions((actions) => actions.setEvents);
 
     useEffect(()=> {
           async function getPosts() {
@@ -26,9 +27,10 @@ export default function Posts({navigation}){
             querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             console.log(doc.id, " => ", doc.data());
-            data.push({...doc.data(),key:doc.id});
+            data.push({...doc.data(),id:doc.id});
             });
             console.log(data);
+            setEvents(data);
             setPosts(data);
             setLoading(false);
         }
