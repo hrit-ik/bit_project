@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { StyleSheet, Text, View, KeyboardAvoidingView, TouchableOpacity, Image, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, KeyboardAvoidingView, TouchableOpacity, Image, Dimensions} from 'react-native'
 import { TextInput } from 'react-native'
 import {auth} from '../Backend/firebase'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
@@ -12,9 +12,10 @@ import ForgotPassModal from '../components/forgotPassModal';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-const LoginScreen = ({navigation, route}) => {
+const SignUp = ({navigation, route}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [username, setUsername] = useState('')
     const [modalVisible, setModalVisible] = useState(false);
     const setUserChecked = useStoreActions((actions) => actions.setUserChecked)
     const setIsLoggedIn = useStoreActions((actions) => actions.setIsLoggedIn)
@@ -53,6 +54,7 @@ const LoginScreen = ({navigation, route}) => {
             uid: user.uid,
             isAdmin: false,
             adminOf: [],
+            name: username,
         });
     }
 
@@ -67,27 +69,12 @@ const LoginScreen = ({navigation, route}) => {
     //     })
     // }, [])
 
-    // const handleSignUp = () => {
-    //     createUserWithEmailAndPassword(auth, email, password)
-    //     .then((userCredentials) => {
-    //         const {user} = userCredentials
-    //         console.log(user.email)
-    //         addUserToDB(user)
-    //         setIsAnonymous(false)
-    //     })
-    //     .catch(error => {
-    //         alert(error)
-    //     })
-    // }
-    // const handleSignUp = () => {
-    //     navigation.navigate('SignUp')
-    // }
-
-    const handleLogin = () => {
-        signInWithEmailAndPassword(auth, email, password)
+    const handleSignUp = () => {
+        createUserWithEmailAndPassword(auth, email, password)
         .then((userCredentials) => {
             const {user} = userCredentials
-            console.log('logged in with:  '+user.email)
+            console.log(user.email)
+            addUserToDB(user)
             setIsAnonymous(false)
         })
         .then(() => {setIsLoggedIn(true)})
@@ -113,7 +100,7 @@ const LoginScreen = ({navigation, route}) => {
                 behavior="padding"
                 style={styles.container}>
                 <TouchableOpacity
-                    style={styles.anonymousLoginButton}
+                    style={styles.anonymoussignUpButton}
                     onPress={() => handleAnonymousLogin()}
                 >
                     <Text style={styles.anonymousLoginText}>Continue</Text>
@@ -124,6 +111,13 @@ const LoginScreen = ({navigation, route}) => {
                 </View>
 
                 <View style={styles.inputContainer}>
+                    <TextInput
+                        placeholder="Name"
+                        value = {username}
+                        style={styles.input}
+                        onChangeText={(text) => setUsername(text)}
+                        autoCapitalize='none'
+                    />
                     <TextInput
                         placeholder="Email"
                         value = {email}
@@ -148,10 +142,10 @@ const LoginScreen = ({navigation, route}) => {
                 </View>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
-                        style={styles.loginButton}
-                        onPress={() => handleLogin()}
+                        style={styles.signUpButton}
+                        onPress={handleSignUp}
                     >
-                        <Text style={styles.loginButtonText}>Login</Text>
+                        <Text style={styles.signUpButtonText}>Sign Up</Text>
                     </TouchableOpacity>
                     {/* <TouchableOpacity
                         style={[styles.button, styles.signupButton]}
@@ -164,13 +158,13 @@ const LoginScreen = ({navigation, route}) => {
                         onPress={() => {handleAnonymousLogin()}}
                     /> */}
                 </View>
-                <Text style={styles.signUpText}>Do not have an account?   <Text style={styles.link} onPress={()=>navigation.navigate('SignUp')}>Resgister Now</Text></Text>
+                <Text style={styles.loginText}>Already have an account?   <Text style={styles.link} onPress={()=>navigation.navigate('Login')}>Login</Text></Text>
                 <ForgotPassModal modalVisible={modalVisible} setModalVisible={setModalVisible}/>
             </KeyboardAvoidingView>
     )
 }
 
-export default LoginScreen
+export default SignUp
 
 const styles = StyleSheet.create({
     container: {
@@ -199,7 +193,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    loginButton: {
+    signUpButton: {
         // backgroundColor: '#fff',
         backgroundColor: '#00b5ec',
         padding: 10,
@@ -221,7 +215,7 @@ const styles = StyleSheet.create({
     //     fontSize: 20,
     //     fontWeight: '700',
     // },
-    loginButtonText: {
+    signUpButtonText: {
         color: '#000',
         fontSize: 20,
         fontWeight: '700',
@@ -229,7 +223,7 @@ const styles = StyleSheet.create({
     // signupButton: {
     //     // backgroundColor: '#0782f9',
     // },
-    signUpText:{
+    loginText:{
         marginTop: 15,
         color: '#ddd',
         fontSize: 15,
@@ -254,7 +248,7 @@ const styles = StyleSheet.create({
         height: SCREEN_WIDTH*0.8,
         borderRadius: 20,
     },
-    anonymousLoginButton: {
+    anonymoussignUpButton: {
         padding: 10,
         margin: 10,
         borderRadius: 5,
@@ -279,4 +273,6 @@ const styles = StyleSheet.create({
         color: '#00b5ec',
         fontSize: 15,
     },
+   
+    //Modal Styles
 })
