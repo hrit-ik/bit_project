@@ -1,8 +1,17 @@
-import React from 'react'
-import { StyleSheet, Text, View, KeyboardAvoidingView, TouchableOpacity, Image, Dimensions, Modal, Pressable } from 'react-native'
+import React, {useState} from 'react'
+import { StyleSheet, Text, View, Modal, Pressable, TextInput } from 'react-native'
+import {Ionicons} from '@expo/vector-icons'
+import {auth} from '../Backend/firebase'
 
 const ForgotPassModal = (props) => {
     const { modalVisible, setModalVisible } = props
+    const [email, setEmail] = useState('')
+    const handlePassResetRequests = async () => {
+      sendPasswordResetEmail(auth, email)
+      .then(alert('Password reset email sent!'))
+      .then(setModalVisible(false))
+      .catch(error => alert(error))
+    }
     return (
       <View style={styles.container}>
         <View style={styles.centeredView}>
@@ -17,12 +26,30 @@ const ForgotPassModal = (props) => {
                     >
                         <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                            <Text style={styles.modalText}>Hello World!</Text>
+                            <Text style={styles.modalText}>Enter Your Email</Text>
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Email"
+                                    placeholderTextColor="#ddd"
+                                    onChangeText={(text) => {
+                                        setEmail(text)
+                                    }}
+                                    autoCapitalize='none'
+                                />
+                            </View>
                             <Pressable
-                            style={[styles.button, styles.buttonClose]}
+                                onPress={() => {handlePassResetRequests()}}
+                                style={styles.button}
+                            >
+                                <Text style={styles.buttonText}>Send Link</Text>
+                            </Pressable>
+                            <Pressable
+                            style={styles.buttonClose}
                             onPress={() => setModalVisible(!modalVisible)}
                             >
-                            <Text style={styles.textStyle}>Hide Modal</Text>
+                            {/* <Text style={styles.textStyle}>Hide Modal</Text> */}
+                            <Ionicons name="close-circle-outline" size={40} color="#000" />
                             </Pressable>
                         </View>
                         </View>
@@ -62,17 +89,12 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5
       },
-      button: {
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2
-      },
-      buttonOpen: {
-        backgroundColor: "#F194FF",
-      },
-      buttonClose: {
-        backgroundColor: "#2196F3",
-      },
+      // buttonOpen: {
+      //   backgroundColor: "#F194FF",
+      // },
+      // buttonClose: {
+      //   backgroundColor: "#2196F3",
+      // },
       textStyle: {
         color: "white",
         fontWeight: "bold",
@@ -80,6 +102,41 @@ const styles = StyleSheet.create({
       },
       modalText: {
         marginBottom: 15,
-        textAlign: "center"
+        textAlign: "center",
+        fontSize: 40,
+      },
+      inputContainer: {
+        borderBottomColor: '#ddd',
+        backgroundColor: '#FFFFFF',
+        borderRadius:30,
+        borderBottomWidth: 1,
+        width:250,
+        height:45,
+        marginBottom:20,
+        flexDirection: 'row',
+        alignItems:'center',
+        marginTop:10,
+      },
+      input:{
+        height:45,
+        marginLeft:16,
+        borderBottomColor: '#FFFFFF',
+        flex:1,
+      },
+      button: {
+        backgroundColor: "#00b5ec",
+        // width:250,
+        paddingHorizontal:30,
+        borderRadius:30,
+        marginBottom:20,
+        paddingVertical:10,
+        alignItems:'center',
+        justifyContent:'center',
+        marginTop: 20,
+      },
+      buttonText:{
+        color: '#FFFFFF',
+        fontSize:20,
+        fontWeight:'bold'
       }
 })
