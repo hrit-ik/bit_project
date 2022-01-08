@@ -14,7 +14,7 @@ import { StyleSheet } from 'react-native';
 import AnimatedTabBar, {TabsConfig, BubbleTabBarItemConfig} from '@gorhom/animated-tabbar';
 
 const Tab = createBottomTabNavigator();
-const HomeTab = () => {
+const MainTabs = () => {
   const adminMode = useStoreState((state) => state.adminMode);
     return (
         <Tab.Navigator 
@@ -59,4 +59,4 @@ const HomeTab = () => {
     )
 }
 
-export default HomeTab
+export default MainTabs

@@ -47,6 +47,9 @@ export default function Settings({route}) {
                     value={adminMode}
                 />
             </View>}
+            <TouchableOpacity style={styles.editEvents} onPress={() => {}}>
+                <Text>Edit Events</Text>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -64,6 +67,14 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 10,
         width: '80%',
+        alignItems: 'center',
+    },
+    editEvents: {
+        backgroundColor: '#0782f9',
+        padding: 10,
+        margin: 10,
+        borderRadius: 10,
+        width: '40%',
         alignItems: 'center',
     },
 })

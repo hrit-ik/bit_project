@@ -1,8 +1,20 @@
-import React from 'react'
-import { StyleSheet, Text, View, KeyboardAvoidingView, TouchableOpacity, Image, Dimensions, Modal, Pressable } from 'react-native'
+import React, {useState, useEffect} from 'react'
+import { StyleSheet, Text, View, TextInput, Modal, Pressable } from 'react-native'
+import {Ionicons} from '@expo/vector-icons'
 
 const CnfrModal = (props) => {
-    const { modalVisible, setModalVisible } = props
+    const { modalVisible, setModalVisible, selectedValue, start } = props
+    const [clubName, setClubName] = useState('')
+    const handleSubmit = () => {
+        if(clubName == selectedValue){
+            start()
+            setModalVisible(false)
+        }
+        else{
+            alert('Incorrect Input')
+        }
+    }
+
     return (
         <View style={styles.container}>
         <View style={styles.centeredView}>
@@ -17,12 +29,30 @@ const CnfrModal = (props) => {
                     >
                         <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                            <Text style={styles.modalText}>Hello World!</Text>
+                            <Text style={styles.modalText}>Enter {selectedValue} to confirm submission</Text>
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Club Name"
+                                    placeholderTextColor="#ddd"
+                                    onChangeText={(text) => {
+                                        setClubName(text)
+                                    }}
+                                    autoCapitalize='none'
+                                />
+                            </View>
                             <Pressable
-                            style={[styles.button, styles.buttonClose]}
+                                onPress={() => {handleSubmit()}}
+                                style={styles.button}
+                            >
+                                <Text style={styles.buttonText}>Confirm</Text>
+                            </Pressable>
+                            <Pressable
+                            style={styles.buttonClose}
                             onPress={() => setModalVisible(!modalVisible)}
                             >
-                            <Text style={styles.textStyle}>Hide Modal</Text>
+                            {/* <Text style={styles.textStyle}>Hide Modal</Text> */}
+                            <Ionicons name="close-circle-outline" size={40} color="#000" />
                             </Pressable>
                         </View>
                         </View>
@@ -62,17 +92,12 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5
       },
-      button: {
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2
-      },
-      buttonOpen: {
-        backgroundColor: "#F194FF",
-      },
-      buttonClose: {
-        backgroundColor: "#2196F3",
-      },
+      // buttonOpen: {
+      //   backgroundColor: "#F194FF",
+      // },
+      // buttonClose: {
+      //   backgroundColor: "#2196F3",
+      // },
       textStyle: {
         color: "white",
         fontWeight: "bold",
@@ -80,7 +105,42 @@ const styles = StyleSheet.create({
       },
       modalText: {
         marginBottom: 15,
-        textAlign: "center"
+        textAlign: "center",
+        fontSize: 20,
+      },
+      inputContainer: {
+        borderBottomColor: '#ddd',
+        backgroundColor: '#FFFFFF',
+        borderRadius:30,
+        borderBottomWidth: 1,
+        width:250,
+        height:45,
+        marginBottom:20,
+        flexDirection: 'row',
+        alignItems:'center',
+        marginTop:10,
+      },
+      input:{
+        height:45,
+        marginLeft:16,
+        borderBottomColor: '#FFFFFF',
+        flex:1,
+      },
+      button: {
+        backgroundColor: "#00b5ec",
+        // width:250,
+        paddingHorizontal:30,
+        borderRadius:30,
+        marginBottom:20,
+        paddingVertical:10,
+        alignItems:'center',
+        justifyContent:'center',
+        marginTop: 20,
+      },
+      buttonText:{
+        color: '#FFFFFF',
+        fontSize:20,
+        fontWeight:'bold'
       }
 })
 

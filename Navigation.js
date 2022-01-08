@@ -5,7 +5,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import EventDetails from './screens/event-details';
 import LoginScreen from './screens/LoginScreen';
-import HomeTab from './components/HomeTab';
 import {auth} from './Backend/firebase';
 import SplashScreen from './screens/SplashScreen';
 import { getUserInfo } from './Backend/getUserInfo';

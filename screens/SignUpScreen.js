@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, KeyboardAvoidingView, TouchableOpacity, Image, 
 import { TextInput } from 'react-native'
 import {auth} from '../Backend/firebase'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import HomeTab from '../components/HomeTab';
 import { db } from '../Backend/firestore';
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { useStoreState, useStoreActions } from 'easy-peasy';
@@ -133,12 +132,12 @@ const SignUp = ({navigation, route}) => {
                         secureTextEntry={true}
                         autoCapitalize='none'
                     />
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     style={styles.forgorPasswordButton}
                     onPress={() => {setModalVisible(true)}}
                 >
                     <Text style={styles.forgorPasswordText}>Forgot Password?</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 </View>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
@@ -147,19 +146,9 @@ const SignUp = ({navigation, route}) => {
                     >
                         <Text style={styles.signUpButtonText}>Sign Up</Text>
                     </TouchableOpacity>
-                    {/* <TouchableOpacity
-                        style={[styles.button, styles.signupButton]}
-                        onPress={() => handleSignUp()}
-                    >
-                        <Text style={[styles.buttonText, styles.signupButtonText]}>Sign Up</Text>
-                    </TouchableOpacity> */}
-                    {/* <Button 
-                        title="Continue w/o login"
-                        onPress={() => {handleAnonymousLogin()}}
-                    /> */}
                 </View>
                 <Text style={styles.loginText}>Already have an account?   <Text style={styles.link} onPress={()=>navigation.navigate('Login')}>Login</Text></Text>
-                <ForgotPassModal modalVisible={modalVisible} setModalVisible={setModalVisible}/>
+                {/* <ForgotPassModal modalVisible={modalVisible} setModalVisible={setModalVisible}/> */}
             </KeyboardAvoidingView>
     )
 }
@@ -235,13 +224,13 @@ const styles = StyleSheet.create({
     logoContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 50,
+        marginBottom: 5,
         borderRadius: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 20,
-        elevation: 5,
+        // shadowColor: '#000',
+        // shadowOffset: { width: 4, height: 4 },
+        // shadowOpacity: 0.3,
+        // shadowRadius: 20,
+        // elevation: 5,
     },
     logo: {
         width: SCREEN_WIDTH*0.8,
@@ -253,8 +242,9 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 5,
         alignItems: 'center',
-        position: 'absolute',
-        top: 50,
+        // position: 'absolute',
+        left: '30%',
+        // top: 50,
         right: 0,
     },
     anonymousLoginText: {

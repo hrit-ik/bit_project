@@ -1,15 +1,17 @@
-import React, {useState, useRef} from 'react'
-import { View, Text, TextInput, StyleSheet, Button, Image, ScrollView} from 'react-native'
+import React, {useState, useRef, useEffect} from 'react'
+import { View, Text, TextInput, StyleSheet, Button, Image, ScrollView, Dimensions} from 'react-native'
 import * as ImagePicker from 'expo-image-picker';
-import {db, storage} from '../Backend/firestore'
+import {db} from '../Backend/firestore'
 import { collection, addDoc, Timestamp } from "firebase/firestore"; 
 import { auth } from "../Backend/firebase";
 import { useUpload } from '../Hooks/useUpload';
 import {Picker} from '@react-native-picker/picker';
 import { useStoreState } from 'easy-peasy';
 import CnfrModal from '../components/cnfrModal';
+import {doc, updateDoc, getDoc} from 'firebase/firestore';
 
 
+const SCREEN_WIDTH = Dimensions.get('window').width;
 const Add = () => {
     const [imageUri, setImageUri] = useState(null);
     const [imageAspect, setImageAspect] = useState(null);
@@ -34,7 +36,8 @@ const Add = () => {
       quality: 1,
     });
 
-    console.log(result);
+    // console.log(result);
+    console.log(allowedClubs)
 
     if (!result.cancelled) {
         setImageUri(result.uri);
@@ -57,9 +60,13 @@ const Add = () => {
                 posterUri: imageURL,
                 createdAt: Timestamp.now(),
                 createdBy: {userEmail: auth.currentUser.email, userId: auth.currentUser.uid},
-                club: {id: selectedValue.id, name: selectedValue.name}
-            });
-
+                club_id: allowedClubs.find(o => o.name == selectedValue)?.id,
+                club_name: selectedValue,
+            })
+            const clubRef = doc(db, "clubs", allowedClubs.find(o => o.name == selectedValue)?.id);
+            await updateDoc(clubRef, {
+                events: [{eventId: docRef?.id, uplodedBy: auth?.currentUser?.email, uploaderId: auth?.currentUser?.uid}]
+            })
             console.log("Document written with ID: ", docRef.id);
             setImageUri(null); setEventDate(''); setEventDescription(''); setEventName(''); setEventTime(''); setImageAspect(null);
             alert("Event added successfully");
@@ -75,9 +82,9 @@ const Add = () => {
     }
         
   }
-  const confirmAddEvent = () => {
-    setModalVisible(true)
-  }
+//   const confirmAddEvent = () => {
+//     setModalVisible(true)
+//   }
 
 
   function start(){
@@ -87,11 +94,15 @@ const Add = () => {
 
   }
 
+
+
     return (
             <View style={styles.container}>
-            <ScrollView>
-                <Button title="Pick an image" onPress={pickImage} />
-                {imageUri && <Image source={{ uri: imageUri }} style={{height: 200, aspectRatio: imageAspect }} />}
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+            >
+                <Button title="Pick an image" onPress={pickImage}/>
+                {imageUri && <Image source={{ uri: imageUri }} style={{height: 200, aspectRatio: imageAspect, marginTop:10, alignSelf: 'center', borderRadius:10 }} />}
                 <TextInput
                     placeholder="Event Name"
                     style={styles.input}
@@ -119,7 +130,7 @@ const Add = () => {
                 />
                  <TextInput
                     multiline={true}
-                    placeholder="Event Link"
+                    placeholder="Event Link (exclude http)"
                     style={[styles.input]}
                     onChangeText={(text) => setEventLink(text)}
                     value={eventLink}
@@ -140,11 +151,11 @@ const Add = () => {
                     disabled = {uploading}
                     title="Add Event"
                     // onPress={()=>{start()}}
-                    onPress={()=>{confirmAddEvent()}}
+                    onPress={()=>{setModalVisible(true)}}
                 />
  
                 </ScrollView>
-                <CnfrModal modalVisible={modalVisible} setModalVisible={setModalVisible} confirmAddEvent={confirmAddEvent}/>
+                <CnfrModal modalVisible={modalVisible} setModalVisible={setModalVisible} selectedValue={selectedValue} start={start}/>
             </View>
     )
 }
@@ -157,9 +168,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
+        paddingBottom: 20,
     },
     input: {
-        width: '80%',
+        width: SCREEN_WIDTH*0.8,
         padding: 15,
         margin: 10,
         backgroundColor: 'white',

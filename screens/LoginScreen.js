@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react'
-import { StyleSheet, Text, View, KeyboardAvoidingView, TouchableOpacity, Image, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, KeyboardAvoidingView, TouchableOpacity, Image, Dimensions, Platform } from 'react-native'
 import { TextInput } from 'react-native'
 import {auth} from '../Backend/firebase'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import HomeTab from '../components/HomeTab';
 import { db } from '../Backend/firestore';
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { useStoreState, useStoreActions } from 'easy-peasy';
@@ -111,6 +110,8 @@ const LoginScreen = ({navigation, route}) => {
     return (
             <KeyboardAvoidingView
                 behavior="padding"
+                // behavior={Platform.OS === "ios" ? "padding" : "height"}
+                // behavior='height'
                 style={styles.container}>
                 <TouchableOpacity
                     style={styles.anonymousLoginButton}
@@ -242,12 +243,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: 50,
-        borderRadius: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 20,
-        elevation: 5,
+        // borderRadius: 20,
+        // shadowColor: '#000',
+        // shadowOffset: { width: 4, height: 4 },
+        // shadowOpacity: 0.3,
+        // shadowRadius: 20,
+        // elevation: 5,
     },
     logo: {
         width: SCREEN_WIDTH*0.8,
@@ -259,8 +260,9 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 5,
         alignItems: 'center',
-        position: 'absolute',
-        top: 50,
+        // position: 'absolute',
+        left: '30%',
+        // top: 50,
         right: 0,
     },
     anonymousLoginText: {
