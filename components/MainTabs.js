@@ -10,7 +10,6 @@ import { auth } from '../Backend/firebase';
 import { getUserInfo } from '../Backend/getUserInfo';
 import {LoadingScreen} from '../screens/SplashScreen'
 import { useStoreState, useStoreActions } from 'easy-peasy';
-import AnimatedTabBar, {TabsConfig, BubbleTabBarItemConfig} from '@gorhom/animated-tabbar';
 import ProfileStack from '../Stacks/ProfileStack';
 
 const Tab = createBottomTabNavigator();

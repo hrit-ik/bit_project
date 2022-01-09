@@ -45,8 +45,8 @@ export default function Settings({route, navigation}) {
                     />
                 </View>
                 <View style={styles.profileInfoContainer}>
-                    <Text style={styles.profileName}>{userData.name}</Text>
-                    <Text style={styles.profileEmail}>{userData.email}</Text>
+                    <Text style={styles.profileName}>{userData?.name}</Text>
+                    <Text style={styles.profileEmail}>{userData?.email}</Text>
                 </View>
             </View>
             

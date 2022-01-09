@@ -1,11 +1,21 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Platform } from 'react-native'
 import LottieView from 'lottie-react-native';
 
 const SplashScreen = ({route, navigation}) => {
-    return (
-        <LottieView source={require('./../LottieFiles/rocket.json')} autoPlay loop />
-    )
+    if(Platform.OS != 'web'){
+        return (
+            <LottieView source={require('./../LottieFiles/splash6.json')} autoPlay loop />
+        )
+    }
+    else{
+        return(
+            <View style={styles.container}>
+                <Text>Loading....</Text>
+            </View>
+        )
+    }
+    
 }
 
 export default SplashScreen

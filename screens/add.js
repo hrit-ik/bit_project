@@ -10,9 +10,6 @@ import { useStoreState, useStoreActions } from 'easy-peasy';
 import CnfrModal from '../components/cnfrModal';
 import {doc, updateDoc, getDoc} from 'firebase/firestore';
 import {Ionicons} from '@expo/vector-icons';
-import DatePicker from 'react-native-date-picker'
-import { Formik } from 'formik';
-import * as yup from 'yup';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const Add = () => {
@@ -114,6 +111,7 @@ const Add = () => {
                 {/* <Button title="Pick an image" onPress={pickImage}/> */}
                 <TouchableOpacity onPress={pickImage} style={styles.imagePicker}><Ionicons name="image" size={70} color="black" /></TouchableOpacity>
                 {imageUri && <Image source={{ uri: imageUri }} style={{height: 200, aspectRatio: imageAspect, marginTop:10, alignSelf: 'center', borderRadius:10 }} />}
+                {!imageUri && <Text style={styles.mssg}>No image selected</Text>}
                 <TextInput
                     placeholder="Event Name"
                     style={styles.input}
@@ -214,6 +212,13 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     error: {
+        color: 'red',
+        fontSize: 12,
+        marginLeft: 10,
+        width: SCREEN_WIDTH*0.8,
+    },
+    mssg: {
+        alignSelf: 'center',
         color: 'red',
         fontSize: 12,
         marginLeft: 10,
