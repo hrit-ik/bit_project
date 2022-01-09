@@ -1,7 +1,7 @@
 import React, {useContext, useState, useEffect} from 'react';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Details from '../screens/details';
+// import Details from '../screens/details';
 import Settings from '../screens/settings';
 import Add from '../screens/add';
 import {Ionicons} from '@expo/vector-icons';
@@ -11,6 +11,7 @@ import { getUserInfo } from '../Backend/getUserInfo';
 import {LoadingScreen} from '../screens/SplashScreen'
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import ProfileStack from '../Stacks/ProfileStack';
+import ClubDetailsStack from '../Stacks/ClubDetailsStack';
 
 const Tab = createBottomTabNavigator();
 const MainTabs = () => {
@@ -38,7 +39,7 @@ const MainTabs = () => {
             } else if (route.name === 'Settings') {
               iconName = focused ? 'cog' : 'cog-outline';
             }
-            else if (route.name === 'Details') {
+            else if (route.name === 'Clubs') {
               iconName = focused ? 'ios-list' : 'ios-list-outline';
             }
             else if (route.name === 'Add') {
@@ -51,7 +52,8 @@ const MainTabs = () => {
         })}
       >
         <Tab.Screen name="Home" component={Home} options={{headerShown: false}}/>
-        <Tab.Screen name="Details" component={Details}/>
+        {/* <Tab.Screen name="Details" component={Details}/> */}
+        <Tab.Screen name="Clubs" component={ClubDetailsStack}/>
         {adminMode && <Tab.Screen name="Add" component={Add} />}
         {/* {adminMode && <Tab.Screen name="Add" component={AddStack} />} */}
         {/* <Tab.Screen name="Settings" component={Settings} options={{ tabBarBadge: 3 }}/> */}
