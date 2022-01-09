@@ -65,7 +65,7 @@ const clubPage = ({route,navigation}) => {
                  </Markdown>
             </View>
             <View style={styles.backButton}>
-                         <Button title="Back" color={'#000'} onPress={navigateBack}/>
+                         <Ionicons name="ios-arrow-back" size={40} color="#244f8f" style={styles.icon} onPress={()=>{navigateBack()}} />
                     </View>  
         </View>
         </ScrollView>
@@ -155,15 +155,15 @@ const styles = StyleSheet.create({
     },
     backButton: {
         position: 'absolute',
-        top: 40,
+        top: 10,
         left: 20,
         zIndex: 2,
-        backgroundColor: '#fff',
-        borderRadius: 20,
-        width: 80,
-        shadowColor: 'black',
-        shadowOpacity: 0.7,
-        shadowRadius: 10,
-        elevation: 5,
+        // backgroundColor: '#fff',
+        // borderRadius: 20,
+        // width: 80,
+        // shadowColor: 'black',
+        // shadowOpacity: 0.7,
+        // shadowRadius: 10,
+        // elevation: 5,
     },
 })

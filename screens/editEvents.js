@@ -16,23 +16,20 @@ const EditEvents = ({navigation}) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [eventName, setEventName] = useState('');
     const [eventId, setEventId] = useState('');
-    const change = useStoreActions((actions) => actions.change);
-    const setChange = useStoreActions((actions) => actions.setChange);
     const cnfrmDelete = (eventName) => {
         setEventName(eventName)
-        setModalVisible(true);
+        // setModalVisible(true);
     }
     const handleDelete = async() => {
-        setEventId(events.find((event) => event.eventName === eventName).id);
-        console.log(eventId);
-        console.log(eventName);
-        await deleteDoc(doc(db, "events", eventId));
-        const userRef = doc(db, "users", auth?.currentUser?.uid);
-        await updateDoc(userRef, {
-            uploadedEvents: userData.uploadedEvents.filter((event) => event.eventName !== eventName)
-        })
-        setEvents(events.filter((event) => event.eventName !== eventName));
-        setChange(!change);
+        // setEventId(events.find((event) => event.eventName === eventName).id);
+        // console.log(eventId);
+        // console.log(eventName);
+        // await deleteDoc(doc(db, "events", eventId));
+        // const userRef = doc(db, "users", auth?.currentUser?.uid);
+        // await updateDoc(userRef, {
+        //     uploadedEvents: userData.uploadedEvents.filter((event) => event.eventName !== eventName)
+        // })
+        // setEvents(events.filter((event) => event.eventName !== eventName));
         setModalVisible(false);
     }
     return (

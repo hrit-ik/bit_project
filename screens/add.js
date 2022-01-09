@@ -28,8 +28,6 @@ const Add = () => {
     const events = useStoreState((state) => state.events);
     const [selectedValue, setSelectedValue] = useState(allowedClubs[0].name);
     const [animation, setAnimation] = useState(false);
-    const change = useStoreActions((actions) => actions.change);
-    const setChange = useStoreActions((actions) => actions.setChange);
     //Date Select
     const [date, setDate] = useState(new Date())
     const [open, setOpen] = useState(false)
@@ -73,18 +71,7 @@ const Add = () => {
 
             const clubRef = doc(db, "clubs", allowedClubs.find(o => o.name == selectedValue)?.id);
             await updateDoc(clubRef, {
-                events: [...events, {id: docRef?.id, uplodedBy: auth?.currentUser?.email, uploaderId: auth?.currentUser?.uid,
-                    club_id: allowedClubs.find(o => o.name == selectedValue)?.id,
-                    club_name: selectedValue,
-                    createdAt: Timestamp.now(),
-                    createdBy: {userEmail: auth?.currentUser?.email, userId: auth?.currentUser?.uid},
-                    eventDate: eventDate,
-                    eventDescription: eventDescription,
-                    eventLink: eventLink,
-                    eventName: eventName,
-                    eventTime: eventTime,
-                    posterUri: imageURL,
-                }]
+                events: [...events, {eventId: docRef?.id, uplodedBy: auth?.currentUser?.email, uploaderId: auth?.currentUser?.uid}]
             })
             await updateDoc(doc(db, "users", auth.currentUser.uid), {
                 uploadedEvents: [...(userData?.uploadedEvents), {id: docRef?.id, eventName: eventName}]
@@ -93,7 +80,6 @@ const Add = () => {
             setImageUri(null); setEventDate(''); setEventDescription(''); setEventName(''); setEventTime(''); setImageAspect(null); setEventLink('');
             alert("Event added successfully");
             setModalVisible(false);
-            setChange(!change);
             setAnimation(false);
             setUploading(false)
           } catch (e) {
