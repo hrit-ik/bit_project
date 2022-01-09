@@ -31,10 +31,6 @@ const EditEvents = ({navigation}) => {
             uploadedEvents: userData.uploadedEvents.filter((event) => event.eventName !== eventName)
         })
         setEvents(events.filter((event) => event.eventName !== eventName));
-        setUserData({
-            ...userData,
-            uploadedEvents: userData.uploadedEvents.filter((event) => event.eventName !== eventName)
-        })
         setModalVisible(false);
     }
     return (
@@ -44,9 +40,9 @@ const EditEvents = ({navigation}) => {
                 {uploadedEvents.map((event, index) => {
                     return (
                         <View key={index} style={styles.listItem}>
-                            <TouchableOpacity>
+                            {/* <TouchableOpacity>
                                 <Ionicons name="notifications" size={20} color="orange" />
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                             <View style={styles.listItemText}>
                                 <Text style={styles.midText}>{event.eventName}</Text>
                             </View>
@@ -58,6 +54,7 @@ const EditEvents = ({navigation}) => {
                         </View>
                     )
                 })}
+                {!uploadedEvents[0] && <Text style={styles.mssg}>No events uploaded yet</Text>}
                 <EventDeleteModal modalVisible={modalVisible} setModalVisible={setModalVisible} eventName={eventName} handleDelete={handleDelete}/>
             </View>
         </ScrollView>

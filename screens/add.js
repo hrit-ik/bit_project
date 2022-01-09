@@ -6,7 +6,7 @@ import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { auth } from "../Backend/firebase";
 import { useUpload } from '../Hooks/useUpload';
 import {Picker} from '@react-native-picker/picker';
-import { useStoreState } from 'easy-peasy';
+import { useStoreState, useStoreActions } from 'easy-peasy';
 import CnfrModal from '../components/cnfrModal';
 import {doc, updateDoc, getDoc} from 'firebase/firestore';
 
@@ -21,12 +21,13 @@ const Add = () => {
     const [eventLink, setEventLink] = useState('');
     const [eventDescription, setEventDescription] = useState('');  
     const [uploading, setUploading] = useState(false);
-    const [selectedValue, setSelectedValue] = useState();
     const clubs = useStoreState((state) => state.clubs);
     const userData = useStoreState((state) => state.userData);
     const allowedClubs = clubs.filter(club => userData.adminOf.includes(club.name));
     const [modalVisible, setModalVisible] = useState(false);
     const events = useStoreState((state) => state.events);
+    const setEvents = useStoreActions((actions) => actions.setEvents);
+    const [selectedValue, setSelectedValue] = useState(allowedClubs[0].name);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -64,6 +65,19 @@ const Add = () => {
                 club_id: allowedClubs.find(o => o.name == selectedValue)?.id,
                 club_name: selectedValue,
             })
+            // setEvents([...events, {
+            //     eventName: eventName,
+            //     eventDate: eventDate,
+            //     eventTime: eventTime,
+            //     eventDescription: eventDescription,
+            //     eventLink: eventLink,
+            //     posterUri: imageURL,
+            //     createdAt: Timestamp.now(),
+            //     createdBy: {userEmail: auth.currentUser.email, userId: auth.currentUser.uid},
+            //     club_id: allowedClubs.find(o => o.name == selectedValue)?.id,
+            //     club_name: selectedValue,
+            //     id: docRef.id,
+            // }])
             const clubRef = doc(db, "clubs", allowedClubs.find(o => o.name == selectedValue)?.id);
             await updateDoc(clubRef, {
                 events: [...events, {eventId: docRef?.id, uplodedBy: auth?.currentUser?.email, uploaderId: auth?.currentUser?.uid}]

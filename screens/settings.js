@@ -1,9 +1,12 @@
-import React, {useContext} from 'react'
-import { View , Text, TouchableOpacity, StyleSheet, Switch} from 'react-native'
+import React, {useContext, useState} from 'react'
+import { View , Text, TouchableOpacity, StyleSheet, Switch, Image, Dimensions} from 'react-native'
 import { auth } from '../Backend/firebase'
 import {signOut} from 'firebase/auth'
 import { useStoreState, useStoreActions } from 'easy-peasy';
+import ProfileModal from '../components/ProfileModal';
 
+
+const SCREEEN_WIDTH = Dimensions.get('window').width
 export default function Settings({route, navigation}) {
     const setLoading = useStoreActions((actions) => actions.setLoading)
     const setUserData = useStoreActions((actions) => actions.setUserData)
@@ -13,6 +16,9 @@ export default function Settings({route, navigation}) {
     const setIsLoggedIn = useStoreActions((actions) => actions.setIsLoggedIn)
     const isAnonymous = useStoreState((state) => state.isAnonymous)
     const setIsAnonymous = useStoreActions((actions) => actions.setIsAnonymous)
+    const [profilePicUri, setProfilePicUri] = useState(null);
+    const [intent, setIntent] = useState('')
+    const [modalVisible, setModalVisible] = useState(false)
 
     const toggleAdminMode = () => {
         setAdminMode(!adminMode)
@@ -34,22 +40,57 @@ export default function Settings({route, navigation}) {
         <View style={styles.container}>
             {/* <Text>Email: {auth.currentUser?.email}</Text>
             <Text>Id: {auth.currentUser?.uid}</Text> */}
-            {userData && <Text>{userData.email}</Text>}
+            <View style={styles.profileContainer}>
+                <View style={styles.profilePicContainer}>
+                    <Image
+                        style={styles.profilePic}
+                        source={profilePicUri ? {uri: profilePicUri} : require('./../assets/images/user_default.png')}
+                    />
+                </View>
+                <View style={styles.profileInfoContainer}>
+                    <Text style={styles.profileName}>{userData.name}</Text>
+                    <Text style={styles.profileEmail}>{userData.email}</Text>
+                </View>
+            </View>
+            
+            {userData.name != 'Anonymous' && <View style={styles.profileUpdateArea}>
+                <View style={styles.settingItem}>
+                    <Text style={styles.settingItemText} onPress={()=>{setIntent('nameChange'); setModalVisible(true)}}>Change Name</Text>
+                </View>
+                <View style={styles.settingItem}>
+                    <Text style={styles.settingItemText}>Change Profile Pic</Text>
+                </View>
+                <View style={styles.settingItem}>
+                    <Text style={styles.settingItemText}>Change College Info</Text>
+                </View>
+                <ProfileModal
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                intent={intent}
+            />
+            </View>}
+            <View style={{marginTop: 50}}>
+                <View style={styles.switchContainer}>
+                    {userData && userData.isAdmin && <View>
+                        <Switch
+                            trackColor={{ false: "#767577", true: "#81b0ff" }}
+                            thumbColor={adminMode ? "#f5dd4b" : "#f4f3f4"}
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={toggleAdminMode}
+                            value={adminMode}
+                        />
+                    </View>}
+                    {userData && userData.isAdmin && <Text style={styles.adminSwitchText}>Add Event</Text>}
+                </View>
+                <View style={{width: SCREEEN_WIDTH*0.8}}>
+                    {userData && userData.isAdmin && <TouchableOpacity style={styles.editEvents} onPress={() => {navigation.navigate('EditEventsScreen')}}>
+                        <Text>Edit Events</Text>
+                    </TouchableOpacity>}
+                </View>
+            </View>
             <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
                 <Text>Sign Out</Text>
             </TouchableOpacity>
-            {userData && userData.isAdmin && <View>
-                <Switch
-                    trackColor={{ false: "#767577", true: "#81b0ff" }}
-                    thumbColor={adminMode ? "#f5dd4b" : "#f4f3f4"}
-                    ios_backgroundColor="#3e3e3e"
-                    onValueChange={toggleAdminMode}
-                    value={adminMode}
-                />
-            </View>}
-            {userData && userData.isAdmin && <TouchableOpacity style={styles.editEvents} onPress={() => {navigation.navigate('EditEventsScreen')}}>
-                <Text>Edit Events</Text>
-            </TouchableOpacity>}
         </View>
     )
 }
@@ -59,22 +100,87 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
+        // justifyContent: 'center',
     },
     signOutButton: {
         backgroundColor: '#0782f9',
         padding: 10,
         margin: 10,
         borderRadius: 10,
-        width: '80%',
+        width: '60%',
         alignItems: 'center',
+        marginTop: 'auto',
+        marginBottom: 50,
     },
     editEvents: {
-        backgroundColor: '#0782f9',
+        backgroundColor: 'rgba(7,130,249, 0.4)',
         padding: 10,
         margin: 10,
         borderRadius: 10,
         width: '40%',
         alignItems: 'center',
+    },
+    profileContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 10,
+        // position: 'absolute',
+        // top: 0,
+    },
+    profilePicContainer: {
+        width: '20%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        // marginRight: 20,
+    },
+    profilePic: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+    },
+    profileInfoContainer: {
+        width: '80%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    profileName: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    profileEmail: {
+        fontSize: 15,
+        // fontWeight: 'bold',
+        color: '#8a8a8a',
+    },
+    switchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        // justifyContent: 'center',
+        margin: 10,
+        width: SCREEEN_WIDTH*0.8,
+        // position: 'absolute',
+        // top: 0,
+    },
+    adminSwitchText: {
+        fontSize: 15,
+        color: '#8a8a8a',
+    },
+    profileUpdateArea: {
+        width: SCREEEN_WIDTH*0.8,
+        alignItems: 'flex-start',
+        margin: 10,
+        justifyContent: 'flex-start',
+    },
+    settingItem: {
+        backgroundColor: 'rgba(7,130,249, 0.4)',
+        padding: 10,
+        paddingHorizontal: 20,
+        margin: 10,
+        borderRadius: 10,
+        // width: '60%',
+        alignItems: 'center',
+        // marginTop: 'auto',
+        marginBottom: 10,
     },
 })

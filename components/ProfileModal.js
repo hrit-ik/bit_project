@@ -2,20 +2,19 @@ import React, {useState, useEffect} from 'react'
 import { StyleSheet, Text, View, TextInput, Modal, Pressable, Alert } from 'react-native'
 import {Ionicons} from '@expo/vector-icons'
 
-const EventDeleteModal = (props) => {
-    const { modalVisible, setModalVisible, eventName, handleDelete } = props
-    const [eventNameInput, setEventNameInput] = useState('')
-    const cnfrmDelete = () => {
-      if(eventNameInput === eventName){
-        handleDelete()
-      }
-      else{
-        alert('Event name is incorrect')
-      }
+const ProfileModal = (props) => {
+    const { modalVisible, setModalVisible, intent } = props
+    const [name, setName] = useState('')
+    const [profileUrl, setProfileUrl] = useState('')
+    const [branch, setBranch] = useState('')
+    const [year, setYear] = useState('')
+    const handleSubmit = () => {
+        console.log('yolo')
     }
-    return (
-        <View style={styles.container}>
-        <View style={styles.centeredView}>
+    if(intent == 'nameChange'){
+        return(
+            <View style={styles.container}>
+                <View style={styles.centeredView}>
                     <Modal
                         animationType="slide"
                         transparent={true}
@@ -27,23 +26,23 @@ const EventDeleteModal = (props) => {
                     >
                         <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                            <Text style={styles.modalText}>Enter <Text style={{fontWeight: '700'}}>{eventName}</Text> to confirm deletion</Text>
+                            <Text style={styles.modalText}>Enter New Username</Text>
                             <View style={styles.inputContainer}>
                                 <TextInput
                                     style={styles.input}
-                                    placeholder="Event Name"
+                                    placeholder="Name"
                                     placeholderTextColor="#ddd"
                                     onChangeText={(text) => {
-                                        setEventNameInput(text)
+                                        setName(text)
                                     }}
                                     autoCapitalize='none'
                                 />
                             </View>
                             <Pressable
-                                onPress={cnfrmDelete}
+                                onPress={() => {handleSubmit()}}
                                 style={styles.button}
                             >
-                                <Text style={styles.buttonText}>Confirm</Text>
+                                <Text style={styles.buttonText}>Change</Text>
                             </Pressable>
                             <Pressable
                             style={styles.buttonClose}
@@ -57,10 +56,23 @@ const EventDeleteModal = (props) => {
                     </Modal>
                 </View>
             </View>
-    )
+        )
+    }
+    else{
+        return(
+            <View style={styles.container}>
+            </View>
+        )
+    }
+    // else if(intent == 'profilePicChange'){
+    //     return()
+    // }
+    // else if(intent == 'collegeInfoChange'){
+    //     return()
+    // }
 }
 
-export default EventDeleteModal
+export default ProfileModal
 
 const styles = StyleSheet.create({
     container: {
@@ -141,4 +153,5 @@ const styles = StyleSheet.create({
         fontWeight:'bold'
       }
 })
+
 

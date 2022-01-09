@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { StyleSheet, Text, View, TextInput, Modal, Pressable } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Modal, Pressable, Alert } from 'react-native'
 import {Ionicons} from '@expo/vector-icons'
 
 const CnfrModal = (props) => {

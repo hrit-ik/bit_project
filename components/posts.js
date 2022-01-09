@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import { Image,View, Text, TouchableOpacity, FlatList, Dimensions, StyleSheet, TouchableWithoutFeedback} from "react-native";
 import { ActivityIndicator } from "react-native";
 import { db } from "../Backend/firestore";
-import { collection , query, where, getDocs, onSnapshot } from "firebase/firestore";
+import { collection , query, where, getDocs, onSnapshot, orderBy } from "firebase/firestore";
 import FullImage from "./FullImage";
 import { useStoreState, useStoreActions } from 'easy-peasy';
 
@@ -19,11 +19,13 @@ export default function Posts({navigation}){
     const [posts, setPosts] = useState([]); // Initial empty array of Posts
     const clubs = useStoreState((state) => state.clubs);
     const setEvents = useStoreActions((actions) => actions.setEvents);
+    const events = useStoreState((state) => state.events);
 
     useEffect(()=> {
           async function getPosts() {
             var data = []
-            const querySnapshot = await getDocs(collection(db, "events"));
+            const q = query(collection(db, "events"), orderBy("createdAt", "desc"))
+            const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             console.log(doc.id, " => ", doc.data());
@@ -31,7 +33,7 @@ export default function Posts({navigation}){
             });
             console.log(data);
             setEvents(data);
-            setPosts(data);
+            // setPosts(data);
             setLoading(false);
         }
         getPosts();
@@ -72,7 +74,7 @@ export default function Posts({navigation}){
                 <Text style={styles.headerText}>Main</Text>
             </View>
             <FlatList
-                data={posts}
+                data={events}
                 style={styles.list}
                 renderItem={({item}) => {
                     return(
