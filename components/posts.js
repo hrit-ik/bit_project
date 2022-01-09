@@ -2,9 +2,10 @@ import React, {useState, useEffect} from "react";
 import { Image,View, Text, TouchableOpacity, FlatList, Dimensions, StyleSheet, TouchableWithoutFeedback} from "react-native";
 import { ActivityIndicator } from "react-native";
 import { db } from "../Backend/firestore";
-import { collection , query, where, getDocs, onSnapshot, orderBy } from "firebase/firestore";
+import { collection , query, where, getDocs, onSnapshot, limit, orderBy, startAfter } from "firebase/firestore";
 import FullImage from "./FullImage";
 import { useStoreState, useStoreActions } from 'easy-peasy';
+import { v4 as uuidv4 } from 'uuid';
 
 const getImageAspectRatio = (uri) => {
     Image.getSize(uri, (width, height) => {
@@ -17,27 +18,49 @@ export default function Posts({navigation}){
 
     const [loading, setLoading] = useState(true); // Setting Initial loading to true on component mount
     const [posts, setPosts] = useState([]); // Initial empty array of Posts
+    const [lastDoc, setlastDoc] = useState('');
     const clubs = useStoreState((state) => state.clubs);
     const setEvents = useStoreActions((actions) => actions.setEvents);
     const events = useStoreState((state) => state.events);
 
     useEffect(()=> {
-          async function getPosts() {
-            var data = []
-            const q = query(collection(db, "events"), orderBy("createdAt", "desc"))
+        async function getPosts() {
+          var data = []
+          const q = query(collection(db, "events"),orderBy("createdAt","desc"), limit(2));
+          const querySnapshot = await getDocs(q);
+          setlastDoc(querySnapshot.docs[querySnapshot.docs.length -1])
+          querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
+          data.push({...doc.data(), key:doc.id});
+          });
+          console.log(data);
+          setPosts(data);
+          setLoading(false);
+          console.log("platform type is ", Platform.OS);
+      }
+      getPosts();
+  }, []);
+  
+
+    async function loadMore(){
+        var data = posts;
+        console.log("loading from ",lastDoc);
+        if(lastDoc){
+            const q = query(collection(db, "events"),orderBy("createdAt","desc"), limit(2),startAfter(lastDoc));
             const querySnapshot = await getDocs(q);
+            setlastDoc(querySnapshot.docs[querySnapshot.docs.length -1])
             querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
-            data.push({...doc.data(),id:doc.id});
-            });
+                console.log(doc.id, " => ", doc.data());
+                data.push({...doc.data(), key:doc.id});
+                });
             console.log(data);
-            setEvents(data);
-            // setPosts(data);
-            setLoading(false);
+            setPosts(data);
         }
-        getPosts();
-    }, []);
+        else{
+            console.log("end of list")
+        }
+    }
 
     const handleClick = (event) => {
         navigation.navigate('EventDetails', {event})
@@ -48,37 +71,17 @@ export default function Posts({navigation}){
     }
 
     return (
-        // <View style={styles.container}>
-        // {/* <View style={styles.header}>
-        //         <Text style={styles.headerText}> Newsroom </Text>
-        //     </View> */}
-        // <FlatList 
-        //     data={posts}
-        //     renderItem={({ item }) => (
-        //         <View style={styles.post}  key={item.key}>
-        //         <View style={styles.postHeader}>
-        //         <Text>User Name: {item.eventName}</Text>
-        //         {/* <Image style={styles.clubLogo } source={{uri: item.club_logo_uri}} /> */}
-        //         </View>
-        //          <TouchableOpacity onPress={()=>{navigation.navigate('EventDetails',{ data: item})}}>
-        //         <View style={styles.imageContainer}>
-        //             <Image source={{uri: item.posterUri}} style={styles.postImage} />
-        //                 </View>
-        //         </TouchableOpacity>
-        //         </View>
-        //     )}
-        // />
-        // </View>
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.headerText}>Main</Text>
             </View>
             <FlatList
-                data={events}
+                data={posts}
                 style={styles.list}
+                onEndReached={()=>{loadMore()}}
                 renderItem={({item}) => {
                     return(
-                        <View style={styles.post} key={item.id}>
+                        <View style={styles.post} key={item.key+String(Math.floor(Math.random()*10))}>
                             <TouchableWithoutFeedback>
                                 <View style={styles.postHeader}>
                                     <Image style={styles.clubLogo } source={{uri: clubs.find(o => o.id === item.club_id)?.logo_uri}} />
@@ -89,10 +92,6 @@ export default function Posts({navigation}){
                             <TouchableOpacity onPress={()=>{handleClick(item)}}>
                                 <FullImage styles={styles.postImage} uri={item.posterUri} />
                             </TouchableOpacity>
-                            {/* <View style={styles.postFooter}>
-                                <Text style={styles.postTitle}>{item.title}</Text>
-                                <Text style={styles.postDate}>{item.date}</Text>
-                            </View> */}
                         </View>)}}
             />
         </View>

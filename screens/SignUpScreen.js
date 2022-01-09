@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     //     fontWeight: '700',
     // },
     signUpButtonText: {
-        color: '#000',
+        color: '#fff',
         fontSize: 20,
         fontWeight: '700',
     },
