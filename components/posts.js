@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     },
     header: {
-        padding: 20,
+        padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#eee',
         width: '100%',

@@ -3,7 +3,6 @@ import { View , Text, TouchableOpacity, StyleSheet, Switch, Image, Dimensions} f
 import { auth } from '../Backend/firebase'
 import {signOut} from 'firebase/auth'
 import { useStoreState, useStoreActions } from 'easy-peasy';
-import ProfileModal from '../components/ProfileModal';
 
 
 const SCREEEN_WIDTH = Dimensions.get('window').width
@@ -17,8 +16,6 @@ export default function Settings({route, navigation}) {
     const isAnonymous = useStoreState((state) => state.isAnonymous)
     const setIsAnonymous = useStoreActions((actions) => actions.setIsAnonymous)
     const [profilePicUri, setProfilePicUri] = useState(null);
-    const [intent, setIntent] = useState('')
-    const [modalVisible, setModalVisible] = useState(false)
 
     const toggleAdminMode = () => {
         setAdminMode(!adminMode)
@@ -53,22 +50,6 @@ export default function Settings({route, navigation}) {
                 </View>
             </View>
             
-            {userData.name != 'Anonymous' && <View style={styles.profileUpdateArea}>
-                <View style={styles.settingItem}>
-                    <Text style={styles.settingItemText} onPress={()=>{setIntent('nameChange'); setModalVisible(true)}}>Change Name</Text>
-                </View>
-                <View style={styles.settingItem}>
-                    <Text style={styles.settingItemText}>Change Profile Pic</Text>
-                </View>
-                <View style={styles.settingItem}>
-                    <Text style={styles.settingItemText}>Change College Info</Text>
-                </View>
-                <ProfileModal
-                modalVisible={modalVisible}
-                setModalVisible={setModalVisible}
-                intent={intent}
-            />
-            </View>}
             <View style={{marginTop: 50}}>
                 <View style={styles.switchContainer}>
                     {userData && userData.isAdmin && <View>

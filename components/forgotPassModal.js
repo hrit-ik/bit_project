@@ -2,9 +2,10 @@ import React, {useState} from 'react'
 import { StyleSheet, Text, View, Modal, Pressable, TextInput } from 'react-native'
 import {Ionicons} from '@expo/vector-icons'
 import {auth} from '../Backend/firebase'
+import {sendPasswordResetEmail} from 'firebase/auth'
 
 const ForgotPassModal = (props) => {
-    const { modalVisible, setModalVisible } = props
+    const { modalVisible, setModalVisible} = props
     const [email, setEmail] = useState('')
     const handlePassResetRequests = async () => {
       sendPasswordResetEmail(auth, email)

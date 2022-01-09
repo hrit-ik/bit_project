@@ -1,14 +1,15 @@
 import React, {useState, useEffect} from 'react'
 import { StyleSheet, Text, View, TextInput, Modal, Pressable, Alert } from 'react-native'
 import {Ionicons} from '@expo/vector-icons'
+import LottieView from 'lottie-react-native';
 
 const CnfrModal = (props) => {
-    const { modalVisible, setModalVisible, selectedValue, start } = props
+    const { modalVisible, setModalVisible, selectedValue, start, animation } = props
     const [clubName, setClubName] = useState('')
     const handleSubmit = () => {
         if(clubName == selectedValue){
             start()
-            setModalVisible(false)
+            // setModalVisible(false)
         }
         else{
             alert('Incorrect Input')
@@ -28,7 +29,10 @@ const CnfrModal = (props) => {
                         }}
                     >
                         <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
+                        {animation && <View style={styles.modalView}>
+                            <LottieView source={require('../LottieFiles/upload.json')} autoPlay loop />
+                          </View>}
+                        {!animation && <View style={styles.modalView}>
                             <Text style={styles.modalText}>Enter {selectedValue} to confirm submission</Text>
                             <View style={styles.inputContainer}>
                                 <TextInput
@@ -54,7 +58,7 @@ const CnfrModal = (props) => {
                             {/* <Text style={styles.textStyle}>Hide Modal</Text> */}
                             <Ionicons name="close-circle-outline" size={40} color="#000" />
                             </Pressable>
-                        </View>
+                        </View>}
                         </View>
                     </Modal>
                 </View>

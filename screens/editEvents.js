@@ -11,7 +11,6 @@ const EditEvents = ({navigation}) => {
     const events = useStoreState((state) => state.events);
     const setEvents = useStoreActions((actions) => actions.setEvents);
     const userData = useStoreState((state) => state.userData);
-    const setUserData = useStoreActions((actions) => actions.setUserData);
     const uploadedEventNames = userData.uploadedEvents.map((event) => event.eventName);
     const uploadedEvents = events.filter((event) => uploadedEventNames.includes(event.eventName));
     const [modalVisible, setModalVisible] = useState(false);

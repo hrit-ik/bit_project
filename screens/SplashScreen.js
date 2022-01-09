@@ -1,11 +1,10 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import LottieView from 'lottie-react-native';
 
 const SplashScreen = ({route, navigation}) => {
     return (
-        <View style={styles.container}>
-            <Text>loading</Text>
-        </View>
+        <LottieView source={require('./../LottieFiles/rocket.json')} autoPlay loop />
     )
 }
 

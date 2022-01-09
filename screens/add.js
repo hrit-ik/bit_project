@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react'
-import { View, Text, TextInput, StyleSheet, Button, Image, ScrollView, Dimensions} from 'react-native'
+import { View, Text, TextInput, StyleSheet, Button, Image, ScrollView, Dimensions, TouchableOpacity} from 'react-native'
 import * as ImagePicker from 'expo-image-picker';
 import {db} from '../Backend/firestore'
 import { collection, addDoc, Timestamp } from "firebase/firestore"; 
@@ -9,7 +9,10 @@ import {Picker} from '@react-native-picker/picker';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import CnfrModal from '../components/cnfrModal';
 import {doc, updateDoc, getDoc} from 'firebase/firestore';
-
+import {Ionicons} from '@expo/vector-icons';
+import DatePicker from 'react-native-date-picker'
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const Add = () => {
@@ -26,8 +29,11 @@ const Add = () => {
     const allowedClubs = clubs.filter(club => userData.adminOf.includes(club.name));
     const [modalVisible, setModalVisible] = useState(false);
     const events = useStoreState((state) => state.events);
-    const setEvents = useStoreActions((actions) => actions.setEvents);
     const [selectedValue, setSelectedValue] = useState(allowedClubs[0].name);
+    const [animation, setAnimation] = useState(false);
+    //Date Select
+    const [date, setDate] = useState(new Date())
+    const [open, setOpen] = useState(false)
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -65,19 +71,7 @@ const Add = () => {
                 club_id: allowedClubs.find(o => o.name == selectedValue)?.id,
                 club_name: selectedValue,
             })
-            // setEvents([...events, {
-            //     eventName: eventName,
-            //     eventDate: eventDate,
-            //     eventTime: eventTime,
-            //     eventDescription: eventDescription,
-            //     eventLink: eventLink,
-            //     posterUri: imageURL,
-            //     createdAt: Timestamp.now(),
-            //     createdBy: {userEmail: auth.currentUser.email, userId: auth.currentUser.uid},
-            //     club_id: allowedClubs.find(o => o.name == selectedValue)?.id,
-            //     club_name: selectedValue,
-            //     id: docRef.id,
-            // }])
+
             const clubRef = doc(db, "clubs", allowedClubs.find(o => o.name == selectedValue)?.id);
             await updateDoc(clubRef, {
                 events: [...events, {eventId: docRef?.id, uplodedBy: auth?.currentUser?.email, uploaderId: auth?.currentUser?.uid}]
@@ -86,8 +80,10 @@ const Add = () => {
                 uploadedEvents: [...(userData?.uploadedEvents), {id: docRef?.id, eventName: eventName}]
             })
             console.log("Document written with ID: ", docRef.id);
-            setImageUri(null); setEventDate(''); setEventDescription(''); setEventName(''); setEventTime(''); setImageAspect(null);
+            setImageUri(null); setEventDate(''); setEventDescription(''); setEventName(''); setEventTime(''); setImageAspect(null); setEventLink('');
             alert("Event added successfully");
+            setModalVisible(false);
+            setAnimation(false);
             setUploading(false)
           } catch (e) {
             console.error("Error adding document: ", e);
@@ -100,13 +96,9 @@ const Add = () => {
     }
         
   }
-//   const confirmAddEvent = () => {
-//     setModalVisible(true)
-//   }
-
 
   function start(){
-
+    setAnimation(true)
     setUploading(true)
     addEvent();
 
@@ -119,7 +111,8 @@ const Add = () => {
             <ScrollView
                 showsVerticalScrollIndicator={false}
             >
-                <Button title="Pick an image" onPress={pickImage}/>
+                {/* <Button title="Pick an image" onPress={pickImage}/> */}
+                <TouchableOpacity onPress={pickImage} style={styles.imagePicker}><Ionicons name="image" size={70} color="black" /></TouchableOpacity>
                 {imageUri && <Image source={{ uri: imageUri }} style={{height: 200, aspectRatio: imageAspect, marginTop:10, alignSelf: 'center', borderRadius:10 }} />}
                 <TextInput
                     placeholder="Event Name"
@@ -128,7 +121,7 @@ const Add = () => {
                     value={eventName}
                 />
                 <TextInput
-                    placeholder="Event Date"
+                    placeholder="Event Date (dd/mm/yy)"
                     style={styles.input}
                     onChangeText={(text) => setEventDate(text)}
                     value={eventDate}
@@ -153,7 +146,6 @@ const Add = () => {
                     onChangeText={(text) => setEventLink(text)}
                     value={eventLink}
                 />
-
                 <Picker
                     selectedValue={selectedValue}
                     onValueChange={(itemValue, itemIndex) =>
@@ -162,19 +154,22 @@ const Add = () => {
                     {allowedClubs.map((club, i) => (
                         <Picker.Item label={club.name} value={club.name} key={i} />
                     ))}
-                    {/* <Picker.Item label="Java" value="java" />
-                    <Picker.Item label="JavaScript" value="js" /> */}
+
                 </Picker>
-                <Button
+                {/* <Button
                     disabled = {uploading}
                     title="Add Event"
                     // onPress={()=>{start()}}
                     onPress={()=>{setModalVisible(true)}}
-                />
- 
+                /> */}
+                <TouchableOpacity onPress={()=>{setModalVisible(true)}} style={styles.button}>
+                    <Text style={styles.buttonText}>Add Event</Text>
+                </TouchableOpacity>
+                
                 </ScrollView>
-                <CnfrModal modalVisible={modalVisible} setModalVisible={setModalVisible} selectedValue={selectedValue} start={start}/>
+                <CnfrModal modalVisible={modalVisible} setModalVisible={setModalVisible} selectedValue={selectedValue} start={start} animation={animation}/>
             </View>
+
     )
 }
 
@@ -204,5 +199,24 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         width: '40%',
         alignItems: 'center',
+    },
+    imagePicker: {
+        alignSelf: 'center',
+    },
+    button: {
+        backgroundColor: '#0782f9',
+        padding: 10,
+        margin: 10,
+        borderRadius: 10,
+        width: '40%',
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginTop: 20,
+    },
+    error: {
+        color: 'red',
+        fontSize: 12,
+        marginLeft: 10,
+        width: SCREEN_WIDTH*0.8,
     },
 })
