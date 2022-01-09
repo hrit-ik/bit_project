@@ -7,7 +7,6 @@ const clubPage = ({route,navigation}) => {
     const [clubData, setClubData] = useState([])
     const [about, setabout] = useState(``);
     const {club} = route.params
-
      useEffect(() => { 
         setClubData(club)
         getmarkdown(club.name);

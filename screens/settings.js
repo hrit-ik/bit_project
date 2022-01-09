@@ -29,7 +29,7 @@ export default function Settings({route, navigation}) {
             setIsLoggedIn(false);
             setUserData(null)
             setLoading(true)
-            if(isAnonymous) {setIsAnonymous(false)}
+            setIsAnonymous(false)
         })
     }
 

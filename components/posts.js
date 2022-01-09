@@ -5,6 +5,7 @@ import { db } from "../Backend/firestore";
 import { collection , query, where, getDocs, onSnapshot, limit, orderBy, startAfter } from "firebase/firestore";
 import FullImage from "./FullImage";
 import { useStoreState, useStoreActions } from 'easy-peasy';
+import { Platform } from "react-native";
 
 const getImageAspectRatio = (uri) => {
     Image.getSize(uri, (width, height) => {
@@ -21,6 +22,7 @@ export default function Posts({navigation}){
     const clubs = useStoreState((state) => state.clubs);
     const setEvents = useStoreActions((actions) => actions.setEvents);
     const events = useStoreState((state) => state.events);
+    const change = useStoreActions((actions) => actions.change);
 
     useEffect(()=> {
         async function getPosts() {
@@ -35,11 +37,12 @@ export default function Posts({navigation}){
           });
           console.log(data);
           setPosts(data);
+          setEvents(data);
           setLoading(false);
           console.log("platform type is ", Platform.OS);
       }
       getPosts();
-  }, []);
+  }, [change]);
   
 
     async function loadMore(){
@@ -106,9 +109,18 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: 50,
-        width: SCREEN_WIDTH,
-        backgroundColor: '#fff',
-    alignItems: 'center',
+        ...Platform.select({
+            ios: {
+              width: '95%'
+            },
+            android: {
+              width: '95%'
+            },
+            default: {
+              // other platforms, web for example
+              width: '50%'
+            }
+          })
     },
     header: {
         padding: 10,

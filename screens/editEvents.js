@@ -16,6 +16,8 @@ const EditEvents = ({navigation}) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [eventName, setEventName] = useState('');
     const [eventId, setEventId] = useState('');
+    const change = useStoreActions((actions) => actions.change);
+    const setChange = useStoreActions((actions) => actions.setChange);
     const cnfrmDelete = (eventName) => {
         setEventName(eventName)
         setModalVisible(true);
@@ -30,6 +32,7 @@ const EditEvents = ({navigation}) => {
             uploadedEvents: userData.uploadedEvents.filter((event) => event.eventName !== eventName)
         })
         setEvents(events.filter((event) => event.eventName !== eventName));
+        setChange(!change);
         setModalVisible(false);
     }
     return (

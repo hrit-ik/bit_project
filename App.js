@@ -47,6 +47,10 @@ const store = createStore({
   setEvents: action((state, payload) => {
     state.events = payload;
   }),
+  change: false,
+  setChange: action((state, payload) => {
+    state.change = payload;
+  }),
 });
 
 export default function App() {
